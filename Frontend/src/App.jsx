@@ -4,6 +4,8 @@ import Login from "./components/SignupPages/Login";
 import CustomerDashboard from "./components/Customer/CustomerDashboard";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import AgentDashboard from "./components/Agent/AgentDashboard";
+import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
+import Register from "./components/SignupPages/Register";
 
 
 function App() {
@@ -13,24 +15,25 @@ function App() {
 
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
+         <Route path="/register" element={<Register />} />
 
         {/* ADMIN */}
         <Route
           path="/admin"
           element={
-            <ProtectedRoute role="admin">
+            <ProtectedRoutes role="admin">
               <AdminDashboard/>
-            </ProtectedRoute>
+            </ProtectedRoutes>
           }
         />
 
-        {/* AGENT */}
+        {/* CUSTOMER */}
         <Route
           path="/customer"
           element={
-            <ProtectedRoute role="customer">
+            <ProtectedRoutes role="customer">
               <CustomerDashboard/>
-            </ProtectedRoute>
+            </ProtectedRoutes>
           }
         />
 
@@ -38,9 +41,9 @@ function App() {
         <Route
           path="/agent"
           element={
-            <ProtectedRoute role="agent">
+            <ProtectedRoutes role="agent">
               <AgentDashboard/>
-            </ProtectedRoute>
+            </ProtectedRoutes>
           }
         />
         

@@ -1,14 +1,15 @@
 import React from 'react'
 import HeroSection from './HeroSection'
 import PopularPackages from './PopularPackages'
-import AppBar from './AppBar'
+import Navbar from './Navbar'
+
 
 function Landingpage() {
   return (
     <div>
-        <AppBar/>
-        <HeroSection/>
-        <PopularPackages/>
+        <Navbar/>
+        {/* <HeroSection/>
+        <PopularPackages/> */}
     </div>
   )
 }
