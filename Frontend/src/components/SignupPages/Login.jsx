@@ -15,6 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Navbar from "../LandingPage/Navbar";
+import api from "../Api/Api";
 
 function Login() {
   const navigate = useNavigate();
@@ -39,11 +40,11 @@ function Login() {
       return;
     }
 
-    console.log("Login success", data);
+   const result = res.data;
 
-    setMsg("Login Successful ");
-    setType("success");
-    setOpen(true);
+      localStorage.setItem("accessToken", result.accessToken);
+      localStorage.setItem("refreshToken", result.refreshToken);
+      localStorage.setItem("role", result.role);
 
     // clear form
     setData({
