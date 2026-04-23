@@ -39,7 +39,7 @@ function Register() {
     <Box
       sx={{
           minHeight: "85vh",        
-          pt: { xs: 6, md: 3},         
+pt: { xs: 6, md: 3, lg: 13.7 },
         backgroundImage: `
           linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
           url('/Register.png')
@@ -48,14 +48,23 @@ function Register() {
         backgroundPosition: "center"
       }}
     >
-      <Grid container sx={{ height: "100%" }}>
+      <Grid container sx={{ height: "100%",
+                    display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignContent:"center"
+      }}>
 
         {/* LEFT SIDE */}
         <Grid item xs={12}  md={6}
           sx={{
+            paddingTop:"100px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
+            // alignItems:"center",
+            alignContent:"center",
+            textAlign:"center",
             px: 8,
             color: "#fff"
           }}
@@ -63,10 +72,10 @@ function Register() {
           <Typography
             variant="h3"
             fontWeight="bold"
-            sx={{ textShadow: "2px 2px 10px rgba(0,0,0,0.7)" }}
+            sx={{ textShadow: "2px 2px 10px rgba(0,0,0,0.7)" , textAlign:"center",}}
             >
             Your Adventure Starts Here <br />
-            <Box component="span" sx={{ fontStyle: "italic" }}>
+            <Box component="span" sx={{ fontStyle: "italic" , textAlign:"center",}}>
                 Join TripEase Today
             </Box>
             </Typography>
