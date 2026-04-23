@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-function ProtectedRoute({ children, role }) {
+function ProtectedRoutes({ children, role }) {
 
   const token = localStorage.getItem("token");
 
@@ -35,4 +35,4 @@ function ProtectedRoute({ children, role }) {
   return children;
 }
 
-export default ProtectedRoute;
+export default ProtectedRoutes;
