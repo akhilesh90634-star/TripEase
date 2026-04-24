@@ -1,128 +1,169 @@
 import React, { useState } from "react";
-import { AppBar, Toolbar, Button, Box, IconButton, Drawer} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { IconButton, Drawer, Box } from "@mui/material";
 import { MenuOutlined } from "@mui/icons-material";
+import logo from "/logo.png";
 
 function Navbar() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
+  const linkStyle = {
+    textDecoration: "none",
+    color: "white",
+    fontWeight: "500",
+    textTransform: "uppercase",
+    padding: "8px 14px",
+    borderRadius: "30px",
+    transition: "0.3s",
+  };
+
+  const activeStyle = {
+    background: "rgba(255,255,255,0.2)",
+  };
+
   const menuItems = [
-    { name: "Home", path: "/" },
     { name: "Destinations", path: "/destinations" },
     { name: "Packages", path: "/packages" },
     { name: "About Us", path: "/about" },
     { name: "Sign Up", path: "/register" },
-    { name: "Login", path: "/login" }
+    { name: "Login", path: "/login" },
   ];
 
   return (
-    <div>
-      <AppBar
-        position="static"
-        sx={{
-          background: "linear-gradient(90deg, #3f7dfc, #00c6ff)",
-          color: "#fff",
-          px: 3
+    <>
+      {/* NAVBAR */}
+      <nav
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "12px 20px",
+          background: "rgba(15, 23, 42, 0.75)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          borderBottom: "1px solid rgba(255,255,255,0.1)",
         }}
       >
-        <Toolbar 
-        sx={{ display: "flex", 
-        justifyContent: "space-between",
-         minHeight: "64px"
-         }}
-        >
+        {/* Logo */}
+        <img
+          src={logo}
+          alt="logo"
+          style={{
+            height: "70px",
+            cursor: "pointer",
+            filter: "brightness(0) invert(1)",
+          }}
+          onClick={() => navigate("/")}
+        />
 
-          {/* LOGO */}
-          <Box sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+        {/* Desktop Menu */}
+        <div className="desktop-menu">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.name}
+              to={item.path}
+              style={({ isActive }) =>
+                isActive ? { ...linkStyle, ...activeStyle } : linkStyle
+              }
+            >
+              {item.name}
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Mobile Menu */}
+        <div className="mobile-menu">
+          <IconButton onClick={() => setOpen(true)} sx={{ color: "white" }}>
+            <MenuOutlined />
+          </IconButton>
+        </div>
+      </nav>
+
+      {/* DRAWER */}
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{
+          sx: {
+            background: "rgba(15, 23, 42, 0.95)",
+            color: "white",
+          },
+        }}
+      >
+        <Box sx={{ pt: 12, width: "200px" }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "center", mb: 3 }}
+            onClick={() => {
+              navigate("/");
+              setOpen(false);
+            }}
+          >
             <img
-              src="/logo.png"
-              alt="TripEase Logo"
-              style={{ height: "70px"}}
+              src={logo}
+              alt="logo"
+              style={{
+                height: "70px",
+                filter: "brightness(0)", // makes it black
+                cursor: "pointer",
+              }}
             />
           </Box>
 
-          <Box
-            sx={{
-              display: { xs: "none", md: "flex" },
-              alignItems: "center",
-              gap: 3
-            }}
-          >
-            <Button sx={{ color: "#fff" }} onClick={() => navigate("/")}>Home</Button>
-            <Button sx={{ color: "#fff" }}>Destinations</Button>
-            <Button sx={{ color: "#fff" }}>Packages</Button>
-            <Button sx={{ color: "#fff" }}>About Us</Button>
-            <Button sx={{ color: "#fff" }} onClick={() => navigate("/register")}>
-              Sign Up
-            </Button>
-
-            <Button
-              variant="contained"
-              onClick={() => navigate("/login")}
+          {menuItems.map((item) => (
+            <Box
+              key={item.name}
+              onClick={() => {
+                navigate(item.path);
+                setOpen(false);
+              }}
               sx={{
-                borderRadius: "20px",
-                px: 3,
-                backgroundColor: "#3f7dfc",
-                color: "#fff",
-                fontWeight: "bold"
+                padding: "12px",
+                margin: "8px 0",
+                borderColor: "black",
+                borderRadius: "30px",
+                textAlign: "center",
+                cursor: "pointer",
+                transition: "0.3s",
+                "&:hover": {
+                  background: "rgba(16, 12, 12, 0.37)",
+                },
               }}
             >
-              Login
-            </Button>
-          </Box>
+              {item.name}
+            </Box>
+          ))}
+        </Box>
+      </Drawer>
 
-          {/*  MENU ICON */}
-          <IconButton
-            sx={{ display: { xs: "block", md: "none" }, color: "#fff" }}
-            onClick={() => setOpen(true)}
-          >
-            <MenuOutlined />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      {/* ✅ RESPONSIVE CSS (NO INLINE CONFLICTS) */}
+      <style>{`
+        .desktop-menu {
+          display: flex;
+          gap: 20px;
+        }
 
-      <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
-  <Box sx={{ width: 250, p: 2 }}>
+        .mobile-menu {
+          display: none;
+        }
 
-    {/*Logo in mobile responsive  */}
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        mb: 2,
-        cursor: "pointer"
-      }}
-      onClick={() => {
-        navigate("/");
-        setOpen(false);
-      }}
-    >
-      <img
-        src="/logo.png"
-        alt="TripEase Logo"
-        style={{ height: "100px", width: "150px" }}
-      />
-    </Box>
-    {menuItems.map((item,ind) => (
-      <Button
-        key={item.name}
-        fullWidth
-        sx={{
-          justifyContent: "flex-start",
-          mb: 1,
-        }}
-        onClick={() => {
-          navigate(item.path);
-          setOpen(false);
-        }}
-      >
-        {item.name}
-      </Button>
-    ))}
-  </Box>
-</Drawer>
-    </div>
+        @media (max-width: 900px) {
+          .desktop-menu {
+            display: none !important;
+          }
+
+          .mobile-menu {
+            display: block !important;
+          }
+        }
+      `}</style>
+    </>
   );
 }
 
