@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landingpage from "./components/LandingPage/Landingpage";
-import Login from "./components/SignupPages/Login";
+import Login from "./components/Auth/Login";
 import CustomerDashboard from "./components/Customer/CustomerDashboard";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
-import Register from "./components/SignupPages/Register";
-import TripDetails from "./components/Tripdetails/TripDetails";
+import Register from "./components/Auth/Register";
+import VerifyOtp from "./components/Auth/Verifyotp";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-         <Route path="/tripdetails" element={<TripDetails />} />
+         <Route path="/verify-otp" element={<VerifyOtp />} />
 
         {/* ADMIN */}
         <Route
@@ -33,7 +33,7 @@ function App() {
         <Route
           path="/customer"
           element={
-            <ProtectedRoutes role="customer">
+            <ProtectedRoutes role="user">
               <CustomerDashboard />
             </ProtectedRoutes>
           }
