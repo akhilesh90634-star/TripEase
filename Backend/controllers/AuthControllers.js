@@ -2,7 +2,8 @@ const UserModel = require("../model/UserModel");
 const { AccessToken, RefreshToken } = require("../utils/Token");
 const transporter = require("../config/mailer");
 
-//  REGISTER 
+
+//  REGISTER
 async function registerUser(req, res) {
   try {
     const data = req.body;
@@ -18,57 +19,64 @@ async function registerUser(req, res) {
       });
     }
 
-    // generate otp
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // role default
+    data.role = data.role || "user";
 
-    data.role = "user";
-    data.otp = otp;
-    data.otpExpiry = Date.now() + 10 * 60 * 1000;
-    data.isVerified = false;
+    let otp;
+
+    // generate otp only for user
+    if (data.role === "user") {
+      otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+      data.otp = otp;
+      data.otpExpiry = Date.now() + 10 * 60 * 1000;
+      data.isVerified = false;
+    }
+    else {
+      data.isVerified = true;
+    }
 
     // create user
     const user = await UserModel.create(data);
-    res.json({
-      message: "User registered successfully. OTP sent to email"
+     res.json({
+      message:
+        data.role === "user"
+          ? "User registered successfully. OTP sent to email"
+          : "Registered successfully"
     });
 
-    // send otp  to email 
-    try {
-      const info = await transporter.sendMail({
-        from: process.env.EMAIL,  
-        to: user.email,
-        subject: "Verify Your Account",
-        html: `
-          <div style="font-family:sans-serif">
-            <h2>TripEase OTP Verification</h2>
-            <p>Your OTP is:</p>
-            <h1>${otp}</h1>
-            <p>This OTP is valid for 10 minutes</p>
-          </div>
-        `
-      });
+    // send otp ONLY for user
+    if (data.role === "user") {
+      try {
+        const info = await transporter.sendMail({
+          from: process.env.EMAIL,
+          to: user.email,
+          subject: "Verify Your Account",
+          html: `
+            <div style="font-family:sans-serif">
+              <h2>TripEase OTP Verification</h2>
+              <p>Your OTP is:</p>
+              <h1>${otp}</h1>
+              <p>This OTP is valid for 10 minutes</p>
+            </div>
+          `
+        });
 
-      console.log("MAIL SENT:", info.response);
-    }
-     catch (mailErr)
-     {
-       console.log("MAIL ERROR:", mailErr);
-       res.status(500).json({
-          message: "  mail failed"
-    });
+        console.log("MAIL SENT:", info.response);
+      } catch (mailErr) {
+        console.log("MAIL ERROR:", mailErr);
+      }
     }
 
   } catch (err) {
-
-    // console.log("REGISTER ERROR:", err);
-
     res.status(500).json({
       message: "Registration failed"
     });
   }
 }
 
-// VERIFY OTP 
+
+//  VERIFY OTP
 async function verifyOtp(req, res) {
   try {
     const { email, otp } = req.body;
@@ -80,6 +88,7 @@ async function verifyOtp(req, res) {
 
     if (
       !user ||
+      user.role !== "user" ||
       String(user.otp) !== String(otp) ||
       user.otpExpiry < Date.now()
     ) {
@@ -107,6 +116,7 @@ async function verifyOtp(req, res) {
   }
 }
 
+
 // resend otp
 async function resendOtp(req, res) {
   try {
@@ -114,7 +124,7 @@ async function resendOtp(req, res) {
 
     const user = await UserModel.findOne({ email });
 
-    if (!user) {
+    if (!user || user.role !== "user") {
       return res.status(404).json({
         message: "User not found"
       });
@@ -164,7 +174,8 @@ async function resendOtp(req, res) {
   }
 }
 
-//  LOGIN 
+
+//  LOGIN
 async function login(req, res) {
   try {
     const { email, password } = req.body;
@@ -177,7 +188,7 @@ async function login(req, res) {
       });
     }
 
-    if (!user.isVerified) {
+    if (user.role === "user" && !user.isVerified) {
       return res.status(403).json({
         message: "Please verify OTP first"
       });
@@ -197,6 +208,7 @@ async function login(req, res) {
     });
   }
 }
+
 
 module.exports = {
   registerUser,

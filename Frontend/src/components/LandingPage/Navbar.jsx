@@ -92,8 +92,8 @@ function Navbar() {
         onClose={() => setOpen(false)}
         PaperProps={{
           sx: {
-            background: "rgba(15, 23, 42, 0.95)",
-            color: "white",
+            // background: "rgba(15, 23, 42, 0.95)",
+            color: "black",
           },
         }}
       >
