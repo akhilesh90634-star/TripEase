@@ -5,8 +5,8 @@ import CustomerDashboard from "./components/Customer/CustomerDashboard";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
+import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
-import VerifyOtp from "./components/Auth/Verifyotp";
 
 function App() {
   return (
@@ -15,8 +15,8 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-         <Route path="/verify-otp" element={<VerifyOtp />} />
-
+        <Route path="/verify-otp" element={<Verifyotp />} />
+         
         {/* ADMIN */}
         <Route
           path="/admin"
