@@ -6,6 +6,7 @@ import AdminDashboard from "./components/Admin/AdminDashboard";
 import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Register from "./components/SignupPages/Register";
+import TripDetails from "./components/Tripdetails/TripDetails";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+         <Route path="/tripdetails" element={<TripDetails />} />
 
         {/* ADMIN */}
         <Route
