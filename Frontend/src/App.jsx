@@ -7,11 +7,6 @@ import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
-import Dashboard from "./components/Agent/AgentLayout/Dashboard";
-import Itinerary from "./components/Agent/AgentLayout/Itinerary";
-import Profile from "./components/Agent/AgentLayout/Profile";
-import Bookings from "./components/Agent/AgentLayout/Bookings";
-import Issues from "./components/Agent/AgentLayout/Issues";
 
 function App() {
   return (
@@ -21,18 +16,17 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-otp" element={<Verifyotp />} />
-         
+        <Route path="/nav" element={<NavBar />} />
+
+
         {/* ADMIN */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoutes role="admin">
+        <Route 
+              path='/admin' 
+              element={<ProtectedRoutes role="admin">
               <AdminDashboard />
-            </ProtectedRoutes>
-          }
-        />
-      {/* Akhilesh is working on development on Admindashboard after deveopment Akhilesh will delete below route*/}
-        <Route path="/ad" element={< AdminDashboard />} />
+            </ProtectedRoutes>} >
+              <Route index element={<h1>admin dashboard</h1>} />
+            </Route>
 
         {/* CUSTOMER */}
         <Route
