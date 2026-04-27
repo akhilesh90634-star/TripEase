@@ -7,6 +7,12 @@ import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
+import Dashboard from "./components/Agent/AgentLayout/Dashboard";
+import Itinerary from "./components/Agent/AgentLayout/Itinerary";
+import Profile from "./components/Agent/AgentLayout/Profile";
+import Bookings from "./components/Agent/AgentLayout/Bookings";
+import Issues from "./components/Agent/AgentLayout/Issues";
+import NavBar from "./components/Admin/landingPage/NavBar";
 
 function App() {
   return (
