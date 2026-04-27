@@ -7,7 +7,6 @@ import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
-import NavBar from "./components/Admin/landingPage/NavBar";
 
 function App() {
   return (
@@ -47,7 +46,14 @@ function App() {
               <AgentDashboard />
             </ProtectedRoutes>
           }
-        />
+        >
+         <Route path="dashboard" element={< Dashboard />} />
+         <Route path="schedule" element={< Itinerary />} />
+         <Route path="profile" element={< Profile />} />
+         <Route path="bookings" element={< Bookings />} />
+          <Route path="issues" element={< Issues />} />
+
+        </Route>
       </Routes>
     </BrowserRouter>
   );
