@@ -51,7 +51,7 @@ function Dashboard() {
       sx={{
         p: 3,
         background: "#f8fafc",
-        height: "70vh",
+        height: "88vh",
         overflowY: "auto",
         "&::-webkit-scrollbar": {
              display: "none" 
