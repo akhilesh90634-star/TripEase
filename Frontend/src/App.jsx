@@ -30,7 +30,7 @@ function App() {
          <Route path="/tripdetails" element={<TripDetails />} />
          <Route path="/mycart" element={<Mycart/>} />
         <Route path="/verify-otp" element={<Verifyotp />} />
-        <Route path="/tripdetails" element={<TripDetails/>} />
+        <Route path="/packagedetails" element={<PackageDetails/>} />
 
         {/* ADMIN */}
         <Route
