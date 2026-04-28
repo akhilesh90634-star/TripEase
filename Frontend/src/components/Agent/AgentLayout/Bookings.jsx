@@ -47,16 +47,13 @@ function Bookings() {
   ];
 
   return (
-    <Box sx={{ p: 3, background: "#f8fafc", minHeight: "100%" }}>
+    <Box sx={{ p: 3, background: "#f8fafc", height: "85vh" }}>
 
       {/* HEADER */}
       <Typography variant="h5" fontWeight="bold" mb={1}>
          Bookings
       </Typography>
 
-      <Typography fontSize="14px" color="primary" mb={2}>
-        Trip Details &gt; Goa Beach Escape
-      </Typography>
 
       {/* TABLE */}
       <Paper sx={{ p: 2, borderRadius: 3 }}>
@@ -97,26 +94,6 @@ function Bookings() {
             </Grid>
           </Grid>
         ))}
-
-        {/* FOOTER */}
-        <Box
-          mt={2}
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Typography fontSize="13px" color="gray">
-            Total Clients: {clientsData.length}
-          </Typography>
-
-          <Typography
-            fontSize="13px"
-            color="primary"
-            sx={{ cursor: "pointer" }}
-          >
-            View All
-          </Typography>
-        </Box>
 
       </Paper>
     </Box>

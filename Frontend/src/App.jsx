@@ -9,6 +9,7 @@ import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
 import VerifyOtp from "./components/Auth/Verifyotp";
 import TripDetails from "./components/Tripdetails/TripDetails";
+import Mycart from "./components/Mycart/mycart";
 import Dashboard from "./components/Agent/AgentLayout/Dashboard";
 import Itinerary from "./components/Agent/AgentLayout/Itinerary";
 import Profile from "./components/Agent/AgentLayout/Profile";
@@ -17,6 +18,9 @@ import Issues from "./components/Agent/AgentLayout/Issues";
 import NavBar from "./components/Admin/landingPage/NavBar";
 import TripDetails from "./components/TripDetails/TripDetails";
 
+import DailyUpdates from "./components/Agent/AgentLayout/DailyUpdates";
+import TripDetails from "./components/Agent/AgentLayout/TripDetails";
+import Trip from "./components/Agent/AgentLayout/Trip";
 
 function App() {
   return (
@@ -25,6 +29,8 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+         <Route path="/tripdetails" element={<TripDetails />} />
+         <Route path="/mycart" element={<Mycart/>} />
         <Route path="/verify-otp" element={<Verifyotp />} />
         <Route path="/tripdetails" element={<TripDetails/>} />
 
@@ -59,11 +65,16 @@ function App() {
             </ProtectedRoutes>
           }
         >
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="schedule" element={<Itinerary />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="bookings" element={<Bookings />} />
-          <Route path="issues" element={<Issues />} />
+         <Route path="dashboard" element={< Dashboard />} />
+         <Route path="schedule" element={< Itinerary />} />
+         <Route path="profile" element={< Profile />} />
+         <Route path="bookings" element={< Bookings />} />
+         <Route path="issues" element={< Issues />} />
+         <Route path="dailyupdates" element={< DailyUpdates />} />
+         <Route path="tripdetails" element={< TripDetails />} />
+          <Route path="trips" element={< Trip />} />
+          
+
         </Route>
       </Routes>
     </BrowserRouter>

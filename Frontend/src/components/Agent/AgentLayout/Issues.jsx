@@ -35,16 +35,13 @@ function Issues() {
   }
 
   return (
-    <Box sx={{ p: 3, background: "#f8fafc", height: "70vh" }}>
+    <Box sx={{ p: 3, background: "#f8fafc", height: "85vh" }}>
 
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" mb={2}>
+      <Box display="flex" justifyContent="space-between" mb={2}  textAlign="right">
         <Box>
           <Typography variant="h5" fontWeight="bold">
             Issues / Support
-          </Typography>
-          <Typography fontSize="14px" color="primary">
-            Trip Details &gt; Goa Beach Escape
           </Typography>
         </Box>
 
