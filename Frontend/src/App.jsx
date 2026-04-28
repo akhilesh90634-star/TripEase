@@ -5,9 +5,18 @@ import CustomerDashboard from "./components/Customer/CustomerDashboard";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
+import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
 import VerifyOtp from "./components/Auth/Verifyotp";
 import TripDetails from "./components/Tripdetails/TripDetails";
+import Dashboard from "./components/Agent/AgentLayout/Dashboard";
+import Itinerary from "./components/Agent/AgentLayout/Itinerary";
+import Profile from "./components/Agent/AgentLayout/Profile";
+import Bookings from "./components/Agent/AgentLayout/Bookings";
+import Issues from "./components/Agent/AgentLayout/Issues";
+import NavBar from "./components/Admin/landingPage/NavBar";
+import TripDetails from "./components/TripDetails/TripDetails";
+
 
 function App() {
   return (
@@ -16,8 +25,8 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-         <Route path="/verify-otp" element={<VerifyOtp />} />
-         <Route path="/tripdetails" element={<TripDetails/>} />
+        <Route path="/verify-otp" element={<Verifyotp />} />
+        <Route path="/tripdetails" element={<TripDetails/>} />
 
         {/* ADMIN */}
         <Route
@@ -27,9 +36,9 @@ function App() {
               <AdminDashboard />
             </ProtectedRoutes>
           }
-        />
-      {/* Akhilesh is working on development on Admindashboard after deveopment Akhilesh will delete below route*/}
-        <Route path="/ad" element={< AdminDashboard />} />
+        >
+          <Route index element={<h1>admin dashboard</h1>} />
+        </Route>
 
         {/* CUSTOMER */}
         <Route
@@ -49,7 +58,13 @@ function App() {
               <AgentDashboard />
             </ProtectedRoutes>
           }
-        />
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="schedule" element={<Itinerary />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="bookings" element={<Bookings />} />
+          <Route path="issues" element={<Issues />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
