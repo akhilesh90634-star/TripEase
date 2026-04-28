@@ -12,7 +12,7 @@ function getCartData() {
           type: "Solo",
           persons: 1,
           price: 12375,
-          image: "/public/Goa.jpg",
+          image: "/Goa.jpg",
         },
         {
           id: 2,
@@ -21,7 +21,7 @@ function getCartData() {
           type: "Group",
           persons: 4,
           price: 7999,
-          image: "/public/thar.jpg",
+          image: "/thar.jpg",
         },
         {
           id: 3,
@@ -30,7 +30,7 @@ function getCartData() {
           type: "Group",
           persons: 6,
           price: 18999,
-          image: "/public/Manali.jpg",
+          image: "/Manali.jpg",
         },
       ];
 }

@@ -47,13 +47,15 @@ function Login() {
       setType("success");
       setOpen(true);
 
-      if (result.role === "admin") {
-        navigate("/admin");
-      } else if (result.role === "agent") {
-        navigate("/agent");
-      } else {
-        navigate("/customer");
-      }
+          setTimeout(() => {
+            if (result.role === "admin") {
+              navigate("/admin");
+            } else if (result.role === "agent") {
+              navigate("/agent");
+            } else {
+              navigate("/customer");
+            }
+          }, 1500);
 
       setData({ email: "", password: "" });
       setShowPassword(false);
@@ -206,12 +208,16 @@ function Login() {
         </Grid>
 
         {/* Snackbar */}
-        <Snackbar
+      <Snackbar
           open={open}
-          autoHideDuration={5000}
+          autoHideDuration={3000}
           onClose={() => setOpen(false)}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          sx={{ top: "90px" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            left: 16
+          }}
         >
           <Alert severity={type} onClose={() => setOpen(false)}>
             {msg}
