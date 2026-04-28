@@ -8,7 +8,6 @@ import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
 import VerifyOtp from "./components/Auth/Verifyotp";
-import TripDetails from "./components/Tripdetails/TripDetails";
 import Mycart from "./components/Mycart/mycart";
 import Dashboard from "./components/Agent/AgentLayout/Dashboard";
 import Itinerary from "./components/Agent/AgentLayout/Itinerary";
@@ -16,7 +15,6 @@ import Profile from "./components/Agent/AgentLayout/Profile";
 import Bookings from "./components/Agent/AgentLayout/Bookings";
 import Issues from "./components/Agent/AgentLayout/Issues";
 import NavBar from "./components/Admin/landingPage/NavBar";
-import TripDetails from "./components/TripDetails/TripDetails";
 
 import DailyUpdates from "./components/Agent/AgentLayout/DailyUpdates";
 import TripDetails from "./components/Agent/AgentLayout/TripDetails";
