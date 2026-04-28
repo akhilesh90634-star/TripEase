@@ -9,6 +9,7 @@ import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
 import VerifyOtp from "./components/Auth/Verifyotp";
 import TripDetails from "./components/Tripdetails/TripDetails";
+import Mycart from "./components/Mycart/mycart";
 import Dashboard from "./components/Agent/AgentLayout/Dashboard";
 import Itinerary from "./components/Agent/AgentLayout/Itinerary";
 import Profile from "./components/Agent/AgentLayout/Profile";
@@ -26,6 +27,8 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+         <Route path="/tripdetails" element={<TripDetails />} />
+         <Route path="/mycart" element={<Mycart/>} />
         <Route path="/verify-otp" element={<Verifyotp />} />
         <Route path="/tripdetails" element={<TripDetails/>} />
 
