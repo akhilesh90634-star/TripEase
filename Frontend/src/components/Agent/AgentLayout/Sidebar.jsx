@@ -12,7 +12,7 @@ function Sidebar() {
   const menuData = [
     { id: 1, name: "Dashboard", icon: <Dashboard />, path: "/agent/dashboard" },
     { id: 2, name: "My Trips", icon: <Luggage />, path: "/agent/trips" },
-    { id: 3, name: "Trip Details", icon: <Map />, path: "/agent/tripdetails" },
+    { id: 3, name: "Trip Details", icon: <Map />, path: "/agent/packagedetails" },
     { id: 4, name: "Daily Updates", icon: <EventNote />, path: "/agent/dailyupdates" },
     { id: 5, name: "Schedule", icon: <CalendarMonth />, path: "/agent/schedule" },
     { id: 6, name: "Bookings", icon: <Groups />, path: "/agent/bookings" },
