@@ -5,7 +5,7 @@ import api from "../Api/Api";
 
 function VerifyOtp() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [timer, setTimer] = useState(30);
+  const [timer, setTimer] = useState(60);
   const inputs = useRef([]);
 
   const location = useLocation();

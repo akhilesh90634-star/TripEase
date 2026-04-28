@@ -2,13 +2,15 @@ const UserModel = require("../model/UserModel");
 const { AccessToken, RefreshToken } = require("../utils/Token");
 const transporter = require("../config/mailer");
 
+// temporary store
+const tempUsers = {};
 
-//  REGISTER
+
+// REGISTER
 async function registerUser(req, res) {
   try {
     const data = req.body;
 
-    // check email
     const exists = await UserModel.findOne({
       email: data.email
     });
@@ -19,56 +21,40 @@ async function registerUser(req, res) {
       });
     }
 
-    // role default
-    data.role = data.role || "user";
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    let otp;
+    // store temporarily
+    tempUsers[data.email] = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      mobile: data.mobile,
+      role: "user",
+      otp,
+      otpExpiry: Date.now() + 10 * 60 * 1000
+    };
 
-    // generate otp only for user
-    if (data.role === "user") {
-      otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-      data.otp = otp;
-      data.otpExpiry = Date.now() + 10 * 60 * 1000;
-      data.isVerified = false;
-    }
-    else {
-      data.isVerified = true;
-    }
-
-    // create user
-    const user = await UserModel.create(data);
-     res.json({
-      message:
-        data.role === "user"
-          ? "User registered successfully. OTP sent to email"
-          : "Registered successfully"
+    await transporter.sendMail({
+      from: process.env.EMAIL,
+      to: data.email,
+      subject: "Verify Your Account",
+      html: `
+        <div style="font-family:sans-serif">
+          <h2>TripEase OTP Verification</h2>
+          <p>Your OTP is:</p>
+          <h1>${otp}</h1>
+          <p>This OTP is valid for 10 minutes</p>
+        </div>
+      `
     });
 
-    // send otp ONLY for user
-    if (data.role === "user") {
-      try {
-        const info = await transporter.sendMail({
-          from: process.env.EMAIL,
-          to: user.email,
-          subject: "Verify Your Account",
-          html: `
-            <div style="font-family:sans-serif">
-              <h2>TripEase OTP Verification</h2>
-              <p>Your OTP is:</p>
-              <h1>${otp}</h1>
-              <p>This OTP is valid for 10 minutes</p>
-            </div>
-          `
-        });
-
-        console.log("MAIL SENT:", info.response);
-      } catch (mailErr) {
-        console.log("MAIL ERROR:", mailErr);
-      }
-    }
+    res.json({
+      message: "OTP sent to email"
+    });
 
   } catch (err) {
+    console.log("REGISTER ERROR:", err);
+
     res.status(500).json({
       message: "Registration failed"
     });
@@ -76,32 +62,33 @@ async function registerUser(req, res) {
 }
 
 
-//  VERIFY OTP
+// VERIFY OTP
 async function verifyOtp(req, res) {
   try {
     const { email, otp } = req.body;
 
-    const user = await UserModel.findOne({ email });
-
-    console.log("DB OTP:", user?.otp);
-    console.log("USER OTP:", otp);
+    const tempUser = tempUsers[email];
 
     if (
-      !user ||
-      user.role !== "user" ||
-      String(user.otp) !== String(otp) ||
-      user.otpExpiry < Date.now()
+      !tempUser ||
+      String(tempUser.otp) !== String(otp) ||
+      tempUser.otpExpiry < Date.now()
     ) {
       return res.status(400).json({
         message: "Invalid or expired OTP"
       });
     }
 
-    user.isVerified = true;
-    user.otp = null;
-    user.otpExpiry = null;
+    await UserModel.create({
+      name: tempUser.name,
+      email: tempUser.email,
+      password: tempUser.password,
+      mobile: tempUser.mobile,
+      role: "user",
+      isVerified: true
+    });
 
-    await user.save();
+    delete tempUsers[email];
 
     res.json({
       message: "Account verified successfully"
@@ -117,65 +104,55 @@ async function verifyOtp(req, res) {
 }
 
 
-// resend otp
+// RESEND OTP
 async function resendOtp(req, res) {
   try {
     const { email } = req.body;
 
-    const user = await UserModel.findOne({ email });
+    const tempUser = tempUsers[email];
 
-    if (!user || user.role !== "user") {
+    if (!tempUser) {
       return res.status(404).json({
         message: "User not found"
       });
     }
 
-    // generate new otp
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    user.otp = otp;
-    user.otpExpiry = Date.now() + 10 * 60 * 1000;
+    tempUser.otp = otp;
+    tempUser.otpExpiry = Date.now() + 10 * 60 * 1000;
 
-    await user.save();
+    tempUsers[email] = tempUser;
 
-    try {
-      await transporter.sendMail({
-        from: process.env.EMAIL,
-        to: user.email,
-        subject: "Resend OTP - Verify Your Account",
-        html: `
-          <div style="font-family:sans-serif">
-            <h2>TripEase OTP Verification</h2>
-            <p>Your new OTP is:</p>
-            <h1>${otp}</h1>
-            <p>This OTP is valid for 10 minutes</p>
-          </div>
-        `
-      });
+    await transporter.sendMail({
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Resend OTP - Verify Your Account",
+      html: `
+        <div style="font-family:sans-serif">
+          <h2>TripEase OTP Verification</h2>
+          <p>Your new OTP is:</p>
+          <h1>${otp}</h1>
+          <p>This OTP is valid for 10 minutes</p>
+        </div>
+      `
+    });
 
-      return res.json({
-        message: "OTP resent successfully"
-      });
-
-    } catch (mailErr) {
-      console.log("RESEND MAIL ERROR:", mailErr);
-
-      return res.status(500).json({
-        message: "OTP generated but email failed to send"
-      });
-    }
+    res.json({
+      message: "OTP resent successfully"
+    });
 
   } catch (err) {
     console.log("RESEND OTP ERROR:", err);
 
-    return res.status(500).json({
+    res.status(500).json({
       message: "Failed to resend OTP"
     });
   }
 }
 
 
-//  LOGIN
+// LOGIN
 async function login(req, res) {
   try {
     const { email, password } = req.body;
@@ -185,12 +162,6 @@ async function login(req, res) {
     if (!user || user.password !== password) {
       return res.status(401).json({
         message: "Invalid credentials"
-      });
-    }
-
-    if (user.role === "user" && !user.isVerified) {
-      return res.status(403).json({
-        message: "Please verify OTP first"
       });
     }
 
@@ -208,7 +179,6 @@ async function login(req, res) {
     });
   }
 }
-
 
 module.exports = {
   registerUser,

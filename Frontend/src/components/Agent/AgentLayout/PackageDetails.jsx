@@ -2,7 +2,7 @@
 import React from "react";
 import { Box, Typography, Paper, Grid } from "@mui/material";
 
-function TripDetails() {
+function PackageDetails() {
 
   const trips = [
     {
@@ -112,4 +112,4 @@ function TripDetails() {
   );
 }
 
-export default TripDetails;
+export default PackageDetails;
