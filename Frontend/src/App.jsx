@@ -13,6 +13,8 @@ import Profile from "./components/Agent/AgentLayout/Profile";
 import Bookings from "./components/Agent/AgentLayout/Bookings";
 import Issues from "./components/Agent/AgentLayout/Issues";
 import NavBar from "./components/Admin/landingPage/NavBar";
+import TripDetails from "./components/TripDetails/TripDetails";
+
 
 function App() {
   return (
@@ -22,17 +24,19 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-otp" element={<Verifyotp />} />
-        <Route path="/nav" element={<NavBar />} />
-
+        <Route path="/tripdetails" element={<TripDetails/>} />
 
         {/* ADMIN */}
-        <Route 
-              path='/admin' 
-              element={<ProtectedRoutes role="admin">
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoutes role="admin">
               <AdminDashboard />
-            </ProtectedRoutes>} >
-              <Route index element={<h1>admin dashboard</h1>} />
-            </Route>
+            </ProtectedRoutes>
+          }
+        >
+          <Route index element={<h1>admin dashboard</h1>} />
+        </Route>
 
         {/* CUSTOMER */}
         <Route
@@ -53,12 +57,11 @@ function App() {
             </ProtectedRoutes>
           }
         >
-         <Route path="dashboard" element={< Dashboard />} />
-         <Route path="schedule" element={< Itinerary />} />
-         <Route path="profile" element={< Profile />} />
-         <Route path="bookings" element={< Bookings />} />
-          <Route path="issues" element={< Issues />} />
-
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="schedule" element={<Itinerary />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="bookings" element={<Bookings />} />
+          <Route path="issues" element={<Issues />} />
         </Route>
       </Routes>
     </BrowserRouter>
