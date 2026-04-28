@@ -7,6 +7,7 @@ import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Register from "./components/SignupPages/Register";
 import TripDetails from "./components/Tripdetails/TripDetails";
+import Mycart from "./components/Mycart/mycart";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
          <Route path="/tripdetails" element={<TripDetails />} />
+         <Route path="/mycart" element={<Mycart/>} />
 
         {/* ADMIN */}
         <Route
