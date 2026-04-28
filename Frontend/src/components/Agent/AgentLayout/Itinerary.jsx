@@ -1,5 +1,5 @@
 import React from "react";
-import {Box,Typography,Paper,Grid,Chip,Button} from "@mui/material";
+import { Box, Typography, Paper, Grid, Chip, Button } from "@mui/material";
 
 function Itinerary() {
 
@@ -54,29 +54,41 @@ function Itinerary() {
     }
   ];
 
-function getStatusColor(status) {
-    if (status === "Completed") return "success";
-    if (status === "Ongoing") return "warning";
+  function getStatusColor(status) {
+    if (status === "Completed")
+       return "success";
+    if (status === "Ongoing")
+       return "warning";
     return "default";
   }
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ px: 3, py: 2 }}>
 
       {/* HEADER */}
-      <Typography variant="h5" fontWeight="bold" mb={1} >
-        Itinerary
-      </Typography>
-
-      <Typography fontSize="14px" color="primary" mb={2}>
-        Trip Details &gt; Goa Beach Escape
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        textAlign="center"
+        mb={2}
+      >
+        Itinerary / Schedule
       </Typography>
 
       {/* TABLE */}
-      <Paper sx={{ p: 2, borderRadius: 3 }}>
-
+      <Paper
+        sx={{
+          p: 2,
+          borderRadius: 3,
+          height: "80vh",
+          overflowY: "auto",
+          "&::-webkit-scrollbar": {
+            width: "none"
+          },scrollbarWidth: "none"
+        }}
+      >
         {/* TABLE HEADER */}
-        <Grid container sx={{ fontWeight: "bold", mb: 1 }}>
+        <Grid container sx={{ fontWeight: "bold", mb: 1, px: 1 }}>
           <Grid item xs={1}>Day</Grid>
           <Grid item xs={2}>Date</Grid>
           <Grid item xs={3}>Plan</Grid>
@@ -93,6 +105,7 @@ function getStatusColor(status) {
             key={index}
             sx={{
               py: 1.5,
+              px: 1,
               borderTop: "1px solid #eee",
               alignItems: "center"
             }}
@@ -122,7 +135,6 @@ function getStatusColor(status) {
             </Grid>
           </Grid>
         ))}
-
       </Paper>
     </Box>
   );

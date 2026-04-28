@@ -5,7 +5,7 @@ function Profile() {
   return (
     <Box
       sx={{
-        height: "70vh",                        
+        height: "85vh",                        
         display: "flex",
         justifyContent:  "center" , 
         alignItems:  "center" ,

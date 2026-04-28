@@ -15,8 +15,9 @@ import Profile from "./components/Agent/AgentLayout/Profile";
 import Bookings from "./components/Agent/AgentLayout/Bookings";
 import Issues from "./components/Agent/AgentLayout/Issues";
 import NavBar from "./components/Admin/landingPage/NavBar";
-import TripDetails from "./components/TripDetails/TripDetails";
-
+import DailyUpdates from "./components/Agent/AgentLayout/DailyUpdates";
+import TripDetails from "./components/Agent/AgentLayout/TripDetails";
+import Trip from "./components/Agent/AgentLayout/Trip";
 
 function App() {
   return (
@@ -59,11 +60,16 @@ function App() {
             </ProtectedRoutes>
           }
         >
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="schedule" element={<Itinerary />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="bookings" element={<Bookings />} />
-          <Route path="issues" element={<Issues />} />
+         <Route path="dashboard" element={< Dashboard />} />
+         <Route path="schedule" element={< Itinerary />} />
+         <Route path="profile" element={< Profile />} />
+         <Route path="bookings" element={< Bookings />} />
+         <Route path="issues" element={< Issues />} />
+         <Route path="dailyupdates" element={< DailyUpdates />} />
+         <Route path="tripdetails" element={< TripDetails />} />
+          <Route path="trips" element={< Trip />} />
+          
+
         </Route>
       </Routes>
     </BrowserRouter>
