@@ -32,7 +32,10 @@ const packageSchema = new mongoose.Schema({
     days: String,
     rating: String,
     category: String,
-    image: String
+    image: String,
+    bookingType: String
+
+
 });
 
 module.exports = mongoose.model("Package",packageSchema);
