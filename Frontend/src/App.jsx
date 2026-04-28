@@ -7,6 +7,8 @@ import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
+import VerifyOtp from "./components/Auth/Verifyotp";
+import TripDetails from "./components/Tripdetails/TripDetails";
 import Dashboard from "./components/Agent/AgentLayout/Dashboard";
 import Itinerary from "./components/Agent/AgentLayout/Itinerary";
 import Profile from "./components/Agent/AgentLayout/Profile";
@@ -25,17 +27,19 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-otp" element={<Verifyotp />} />
-        <Route path="/nav" element={<NavBar />} />
-
+        <Route path="/tripdetails" element={<TripDetails/>} />
 
         {/* ADMIN */}
-        <Route 
-              path='/admin' 
-              element={<ProtectedRoutes role="admin">
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoutes role="admin">
               <AdminDashboard />
-            </ProtectedRoutes>} >
-              <Route index element={<h1>admin dashboard</h1>} />
-            </Route>
+            </ProtectedRoutes>
+          }
+        >
+          <Route index element={<h1>admin dashboard</h1>} />
+        </Route>
 
         {/* CUSTOMER */}
         <Route
