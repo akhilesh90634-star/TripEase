@@ -7,7 +7,6 @@ import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
-import VerifyOtp from "./components/Auth/Verifyotp";
 import Mycart from "./components/Mycart/mycart";
 import Dashboard from "./components/Agent/AgentLayout/Dashboard";
 import Itinerary from "./components/Agent/AgentLayout/Itinerary";
