@@ -1,9 +1,34 @@
 const express = require("express");
 const router = express.Router();
 
-const {registerUser,loginUser} = require("../controllers/UserControllers");
+const {
+  createUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser
+} = require("../controllers/UserControllers");
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+const {
+  adminAuth,
+  userOrAdminAuth
+} = require("../middleware/Auth");
+
+
+// CREATE → Admin
+router.post("/", adminAuth, createUser);
+
+// GET ALL → Admin
+router.get("/", adminAuth, getAllUsers);
+
+// GET ONE → Admin or Self
+router.get("/:id", userOrAdminAuth, getUserById);
+
+// UPDATE → Admin or Self
+router.put("/:id", userOrAdminAuth, updateUser);
+
+// DELETE → Admin
+router.delete("/:id", adminAuth, deleteUser);
+
 
 module.exports = router;

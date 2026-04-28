@@ -1,17 +1,6 @@
 import React, { useState } from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Card,
-  Link,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import {Box,TextField,Button,Typography,Card,Link,Grid,IconButton,InputAdornment,Snackbar,
+  Alert,} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import Navbar from "../LandingPage/Navbar";
@@ -40,24 +29,23 @@ function Login() {
       return;
     }
 
+    if (!/\S+@\S+\.\S+/.test(data.email)) {
+      setMsg("Enter valid email");
+      setType("error");
+      setOpen(true);
+      return;
+    }
+
     try {
-      let res;
-
-      try {
-        res = await api.post("/admin/login", data);
-      } catch {
-        try {
-          res = await api.post("/agent/login", data);
-        } catch {
-          res = await api.post("/user/login", data);
-        }
-      }
-
+      const res = await api.post("/auth/login", data);
       const result = res.data;
 
       localStorage.setItem("accessToken", result.accessToken);
       localStorage.setItem("refreshToken", result.refreshToken);
-      localStorage.setItem("role", result.role);
+
+      setMsg("Login successful");
+      setType("success");
+      setOpen(true);
 
       if (result.role === "admin") {
         navigate("/admin");
@@ -67,14 +55,10 @@ function Login() {
         navigate("/customer");
       }
 
-      setData({
-        email: "",
-        password: "",
-      });
-
+      setData({ email: "", password: "" });
       setShowPassword(false);
     } catch (err) {
-      setMsg("Invalid credentials");
+      setMsg(err.response?.data?.message || "Login failed");
       setType("error");
       setOpen(true);
     }
@@ -83,23 +67,21 @@ function Login() {
   return (
     <div>
       <Navbar />
+
       <Box
         sx={{
-          paddingTop: "90px",
-          minHeight: "88vh",
-          pt: { xs: 6, md: 0, lg: 11 },
+          minHeight: "100vh",
+          pt: "90px",
           backgroundImage: `
             linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
             url('/login.png')
           `,
           backgroundSize: "cover",
-          backgroundPosition: {
-            xs: "center",
-            md: "center",
-          },
+          backgroundPosition: "center",
         }}
       >
-        <Grid container sx={{ height: "82vh" }}>
+        <Grid container sx={{ minHeight: "calc(100vh - 90px)" }}>
+          
           {/* LEFT SIDE */}
           <Grid
             item
@@ -109,7 +91,7 @@ function Login() {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              px: 8,
+              px: { xs: 3, md: 8 },
               color: "#fff",
               textAlign: { xs: "center", md: "left" },
             }}
@@ -121,7 +103,7 @@ function Login() {
                 textShadow: "2px 2px 10px rgba(0,0,0,0.7)",
               }}
             >
-              Welcome To{" "}
+              Welcome To 
               <Box component="span" sx={{ fontStyle: "italic" }}>
                 TripEase
               </Box>
@@ -135,7 +117,8 @@ function Login() {
                 fontStyle: "italic",
               }}
             >
-              Login to explore destinations, <br />
+              Login to explore destinations,
+              <br />
               manage your trips, and travel with ease.
             </Typography>
           </Grid>
@@ -147,24 +130,16 @@ function Login() {
             md={6}
             sx={{
               display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              alignItems: "center",
               justifyContent: "center",
-              alignContent: "center",
-              gap: "0px",
-              minWidth: 0,
-              boxSizing: "border-box",
-              height: "100%",
-              mt: { xs: 3, md: 6 },
-              mb: { xs: 3, md: 0 },
+              alignItems: "center",
               px: 2,
             }}
           >
             <Card
               sx={{
-                p: 3,
-                width: 350,
+                p: 4,
+                width: "100%",
+                maxWidth: 380,
                 borderRadius: 4,
                 backgroundColor: "rgba(255,255,255,0.9)",
                 backdropFilter: "blur(20px)",
@@ -175,7 +150,7 @@ function Login() {
                 variant="h5"
                 fontWeight="bold"
                 textAlign="center"
-                mb={1}
+                mb={2}
               >
                 Login
               </Typography>
@@ -236,6 +211,7 @@ function Login() {
           autoHideDuration={5000}
           onClose={() => setOpen(false)}
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          sx={{ top: "90px" }}
         >
           <Alert severity={type} onClose={() => setOpen(false)}>
             {msg}
