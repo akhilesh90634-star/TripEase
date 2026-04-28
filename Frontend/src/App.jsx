@@ -7,6 +7,7 @@ import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Register from "./components/Auth/Register";
 import VerifyOtp from "./components/Auth/Verifyotp";
+import TripDetails from "./components/Tripdetails/TripDetails";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
          <Route path="/verify-otp" element={<VerifyOtp />} />
+         <Route path="/tripdetails" element={<TripDetails/>} />
 
         {/* ADMIN */}
         <Route
