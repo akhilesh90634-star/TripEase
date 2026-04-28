@@ -49,11 +49,11 @@ function Login() {
 
           setTimeout(() => {
             if (result.role === "admin") {
-              navigate("/admin/admindashboard");
+              navigate("/admin");
             } else if (result.role === "agent") {
-              navigate("/agent/dashboard");
+              navigate("/agent");
             } else {
-              navigate("/customer/customerdashboard");
+              navigate("/customer");
             }
           }, 1500);
 

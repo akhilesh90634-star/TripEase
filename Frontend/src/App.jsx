@@ -63,7 +63,7 @@ function App() {
             </ProtectedRoutes>
           }
         >
-         <Route path="dashboard" element={< Dashboard />} />
+         <Route index element={< Dashboard />} />
          <Route path="schedule" element={< Itinerary />} />
          <Route path="profile" element={< Profile />} />
          <Route path="bookings" element={< Bookings />} />
