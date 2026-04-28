@@ -83,7 +83,7 @@ async function handleRegister() {
       <Navbar />
       <Box
         sx={{
-          minHeight: "85vh",
+          minHeight: "83vh",
           pt: { xs: 6, md: 3, lg: 13.7 },
           backgroundImage: `
             linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
@@ -99,7 +99,7 @@ async function handleRegister() {
             height: "100%",
             display: "flex",
             flexDirection: { xs: "column", md: "row" }, 
-            justifyContent: "center",
+            justifyContent: "start",
             alignContent: "center"
           }}
         >
@@ -110,11 +110,10 @@ async function handleRegister() {
             xs={12}
             md={6}
             sx={{
-              paddingTop: "100px",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
-              alignContent: "center",
+              justifyContent: "flex-start",
+              mt: "120px",
               textAlign: "center",
               px: 8,
               color: "#fff"
@@ -254,17 +253,21 @@ async function handleRegister() {
           </Grid>
         </Grid>
 
-        <Snackbar
-          open={open}
-          autoHideDuration={3000}
-          onClose={() => setOpen(false)}
-           anchorOrigin={{ vertical: "top", horizontal: "right" }}
-             sx={{ mt: "80px" }}
-        >
-          <Alert severity={type} onClose={() => setOpen(false)}>
-            {msg}
-          </Alert>
-        </Snackbar>
+       <Snackbar
+            open={open}
+            autoHideDuration={3000}
+            onClose={() => setOpen(false)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            sx={{
+              position: "fixed",
+              bottom: 16,
+              left: 16
+            }}
+          >
+            <Alert severity={type} onClose={() => setOpen(false)}>
+              {msg}
+            </Alert>
+          </Snackbar>
       </Box>
     </div>
   );

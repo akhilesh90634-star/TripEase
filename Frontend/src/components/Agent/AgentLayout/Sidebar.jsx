@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Box, Typography, Divider, IconButton, Tooltip } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Dashboard, Luggage, Map, EventNote, CalendarMonth, Groups, ReportProblem, Person,
   Settings, KeyboardDoubleArrowLeft, Logout} from "@mui/icons-material";
 
 function Sidebar() {
   const [isMenuclose, setisMenuclose] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuData = [
     { id: 1, name: "Dashboard", icon: <Dashboard />, path: "/agent/dashboard" },
@@ -89,38 +90,47 @@ function Sidebar() {
           "&::-webkit-scrollbar": { display: "none" }
         }}
       >
-        {menuData.map((item,ind) => (
-          <Tooltip
-            key={item.id}
-            title={isMenuclose ? item.name : ""}
-            placement="right"
-          >
-            <Box
-              onClick={() => item.path && navigate(item.path)}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 2,
-                px: 2,
-                py: 1.5,
-                cursor: "pointer",
-                justifyContent: isMenuclose ? "center" : "flex-start",
-                borderRadius: "8px",
-                mx: 1,
-                color: "#cbd5e1",
-                "&:hover": {
-                  background: "rgba(255,255,255,0.1)",
-                  color: "#fff"
-                }
-              }}
+        {menuData.map((item,ind) => {
+          const isActive = location.pathname === item.path;
+
+          return (
+            <Tooltip
+              key={item.id}
+              title={isMenuclose ? item.name : ""}
+              placement="right"
             >
-              {item.icon}
-              {!isMenuclose && (
-                <Typography fontSize="14px">{item.name}</Typography>
-              )}
-            </Box>
-          </Tooltip>
-        ))}
+              <Box
+                onClick={() => item.path && navigate(item.path)}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  px: 2,
+                  py: 1.5,
+                  cursor: "pointer",
+                  justifyContent: isMenuclose ? "center" : "flex-start",
+                  borderRadius: "8px",
+                  mx: 1,
+                  color: isActive ? "#fff" : "#cbd5e1",
+                  background: isActive
+                    ? "linear-gradient(90deg,#3b82f6,#2563eb)"
+                    : "transparent",
+                  "&:hover": {
+                    background: isActive
+                      ? "linear-gradient(90deg,#3b82f6,#2563eb)"
+                      : "rgba(255,255,255,0.1)",
+                    color: "#fff"
+                  }
+                }}
+              >
+                {item.icon}
+                {!isMenuclose && (
+                  <Typography fontSize="14px">{item.name}</Typography>
+                )}
+              </Box>
+            </Tooltip>
+          );
+        })}
       </Box>
 
       {/* PROFILE */}
