@@ -51,7 +51,7 @@ function Bookings() {
 
       {/* HEADER */}
       <Typography variant="h5" fontWeight="bold" mb={1}>
-         Bookings
+         Bookings Of Client Details 
       </Typography>
 
 

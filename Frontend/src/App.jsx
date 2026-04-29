@@ -19,6 +19,7 @@ import DailyUpdates from "./components/Agent/AgentLayout/DailyUpdates";
 import Trip from "./components/Agent/AgentLayout/Trip";
 import PackageDetails from "./components/Agent/AgentLayout/PackageDetails";
 import TripDetails from "./components/Tripdetails/TripDetails";
+import Settings from "./components/Agent/AgentLayout/Settings";
 
 function App() {
   return (
@@ -70,7 +71,8 @@ function App() {
          <Route path="issues" element={< Issues />} />
          <Route path="dailyupdates" element={< DailyUpdates />} />
          <Route path="packagedetails" element={< PackageDetails />} />
-          <Route path="trips" element={< Trip />} />
+         <Route path="trips" element={< Trip />} />
+         <Route path="settings" element={< Settings />} />
           
 
         </Route>
