@@ -27,6 +27,7 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+         <Route path="/tripdetails" element={<TripDetails />} />
          <Route path="/mycart" element={<Mycart/>} />
         <Route path="/verify-otp" element={<Verifyotp />} />
         <Route path="/tripdetails" element={<TripDetails/>} />
