@@ -1,17 +1,6 @@
 import React, { useState } from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Card,
-  Link,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Snackbar,
-  Alert
-} from "@mui/material";
+import {Box,TextField,Button,Typography,Card,Link,Grid,IconButton,InputAdornment,
+  Snackbar,Alert} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../LandingPage/Navbar";
@@ -38,43 +27,56 @@ function Register() {
     setData({ ...data, [e.target.name]: e.target.value });
   }
 
-  async function handleRegister() {
-    if (!data.name || !data.email || !data.mobile || !data.password || !data.confirmPassword) {
-      setMsg("Please fill all fields");
-      setType("error");
-      setOpen(true);
-      return;
-    }
-
-    if (data.password !== data.confirmPassword) {
-      setMsg("Passwords do not match");
-      setType("error");
-      setOpen(true);
-      return;
-    }
-
-    try {
-      await api.post("/user/register", {
-        name: data.name,
-        email: data.email,
-        mobile: data.mobile,
-        password: data.password
-      });
-
-      setMsg("Registration successful");
-      setType("success");
-      setOpen(true);
-
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-
-    } catch (err) {
-      setMsg(err.response?.data?.message || "Registration failed");
-      setType("error");
-      setOpen(true);
-    }
+async function handleRegister() {
+  if (!data.name || !data.email || !data.mobile || !data.password || !data.confirmPassword) {
+    setMsg("Please fill all fields");
+    setType("error");
+    setOpen(true);
+    return;
   }
+
+  if (data.password !== data.confirmPassword) {
+    setMsg("Passwords do not match");
+    setType("error");
+    setOpen(true);
+    return;
+  }
+
+  try {
+    const res = await api.post("/auth/register", {   
+      name: data.name,
+      email: data.email,
+      mobile: data.mobile,
+      password: data.password
+    });
+
+    setMsg("OTP sent to your email");   
+    setType("success");
+    setOpen(true);
+
+    //  going to OTP page
+
+    setTimeout(() => {
+      navigate("/verify-otp", { state: { email: data.email } });
+    }, 1000);
+
+  } catch (err) {
+    const msg = err.response?.data?.message || "";
+
+    if (msg.toLowerCase().includes("email")) {
+      setMsg("Email already exists");
+    } 
+    else if (msg.toLowerCase().includes("mobile")) {
+      setMsg("Mobile number already exists");
+    } 
+    else {
+      setMsg("User already exists");
+    }
+
+    setType("error");
+    setOpen(true);
+  }
+}
 
   return (
     <div>
@@ -96,7 +98,7 @@ function Register() {
           sx={{
             height: "100%",
             display: "flex",
-            flexDirection: { xs: "column", md: "row" }, // 🔥 responsive preserved
+            flexDirection: { xs: "column", md: "row" }, 
             justifyContent: "center",
             alignContent: "center"
           }}
@@ -256,7 +258,8 @@ function Register() {
           open={open}
           autoHideDuration={3000}
           onClose={() => setOpen(false)}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+           anchorOrigin={{ vertical: "top", horizontal: "right" }}
+             sx={{ mt: "80px" }}
         >
           <Alert severity={type} onClose={() => setOpen(false)}>
             {msg}
