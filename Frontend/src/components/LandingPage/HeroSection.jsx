@@ -105,9 +105,10 @@ function HeroSection({ setFilteredPackages }) {
       <Box
         sx={{
           position: "relative",
-          height: "575px",
+          height: "100vh",
           overflow: "hidden",
-          color: "white"
+          color: "white",
+           marginTop: "-80px" 
         }}
       >
         {/* Video */}
@@ -193,7 +194,7 @@ function HeroSection({ setFilteredPackages }) {
 
           <Stack direction="row" spacing={4} alignItems="center">
             <Box>
-              <Typography mb={1} fontSize={20}>
+              <Typography mb={1} fontSize={20} textAlign="center">
                 Where to next?
               </Typography>
 
@@ -220,24 +221,7 @@ function HeroSection({ setFilteredPackages }) {
                   <Search />
                 </Button>
               </Stack>
-            </Box>
-
-            <Box>
-              <Typography mb={1} fontSize={20}>
-                Ready to be inspired?
-              </Typography>
-
-              <Button
-                sx={{
-                  width: "320px",
-                  bgcolor: "#e5ddd5",
-                  color: "black",
-                  height: "56px"
-                }}
-              >
-                Share your vision
-              </Button>
-            </Box>
+            </Box>           
           </Stack>
         </Box>
       </Box>

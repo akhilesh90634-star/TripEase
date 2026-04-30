@@ -2,24 +2,33 @@ import React, { useState } from "react";
 import { Box, Typography, Divider, IconButton, Tooltip } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dashboard, Luggage, Map, EventNote, CalendarMonth, Groups, ReportProblem, Person,
-  Settings, KeyboardDoubleArrowLeft, Logout} from "@mui/icons-material";
+  Settings, KeyboardDoubleArrowLeft, Logout,People, Discount,LocalOffer,
+  Hotel,
+  HotelSharp,
+  Home,
+  CardTravel} from "@mui/icons-material";
 
-function Sidebar() {
+function AdminSidebar() {
   const [isMenuclose, setisMenuclose] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const menuData = [
-    { id: 1, name: "Dashboard", icon: <Dashboard />, path: "/agent" },
-    { id: 2, name: "My Trips", icon: <Luggage />, path: "/agent/trips" },
-    { id: 3, name: "Trip Details", icon: <Map />, path: "/agent/packagedetails" },
-    { id: 4, name: "Daily Updates", icon: <EventNote />, path: "/agent/dailyupdates" },
-    { id: 5, name: "Schedule", icon: <CalendarMonth />, path: "/agent/schedule" },
-    { id: 6, name: "Bookings", icon: <Groups />, path: "/agent/bookings" },
-    { id: 7, name: "Issues", icon: <ReportProblem />, path: "/agent/issues" },
-    { id: 8, name: "Profile", icon: <Person />, path: "/agent/profile" },
-    { id: 9, name: "Settings", icon: <Settings />, path: "/agent/settings" }
-  ];
+ const menuData = [
+  { id: 1, name: "Dashboard", icon: <Dashboard />, path: "/admin" },
+  { id: 2, name: "Users", icon: <People />, path: "/admin/users" },
+  { id: 3, name: "Agents", icon: <People />, path: "/admin/agents" },
+  { id: 4, name: "Trips", icon: <Luggage />, path: "/admin/trip" },
+  { id: 5, name: "Trip Details", icon: <Map />, path: "/admin/detailsoftrips" },
+  { id: 6, name: "Packages", icon: <CardTravel />, path: "/admin/packages" },
+  { id: 7, name: "Daily Updates", icon: <EventNote />, path: "/admin/dailyupdates" },
+  { id: 8, name: "Schedule", icon: <CalendarMonth />, path: "/admin/schedule" },
+  { id: 9, name: "Bookings", icon: <Groups />, path: "/admin/bookings" },
+  { id: 10, name: "Hotels", icon: <Home />, path: "/admin/hotels" },
+  { id: 11, name: "Coupons", icon: <LocalOffer />, path: "/admin/coupons" },
+  { id: 12, name: "Discount", icon: <Discount />, path: "/admin/discount" },
+  { id: 13, name: "Issues", icon: <ReportProblem />, path: "/admin/issues" },
+  { id: 14, name: "Profile", icon: <Person />, path: "/admin/profile" },
+];
 
  function handleMenu() {
   setisMenuclose(!isMenuclose);
@@ -111,7 +120,7 @@ function Sidebar() {
                   justifyContent: isMenuclose ? "center" : "flex-start",
                   borderRadius: "8px",
                   mx: 1,
-                  mb: 0.9,  
+                   mb: 0.9,  
                   color: isActive ? "#fff" : "#cbd5e1",
                   background: isActive
                     ? "linear-gradient(90deg,#3b82f6,#2563eb)"
@@ -160,11 +169,11 @@ function Sidebar() {
         {!isMenuclose && (
           <Box>
             <Typography fontSize="14px" fontWeight="bold" color="#fff">
-              Agent
+              Admin
             </Typography>
 
             <Typography fontSize="12px" sx={{ opacity: 0.7, color: "#cbd5e1" }}>
-              Travel Agent
+              admin
             </Typography>
           </Box>
         )}
@@ -200,4 +209,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default AdminSidebar;
