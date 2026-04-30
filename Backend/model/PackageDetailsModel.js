@@ -11,7 +11,7 @@ const packageDetailsSchema = new mongoose.Schema({
   tax: Number,
   total: Number,
 
-  // ✅ Reference to Package
+  //Reference to Package
   packageId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Package",
