@@ -14,7 +14,7 @@ function SplashScreen() {
         color: "white"
       }}
     >
-      {/* 🎥 Background Video */}
+      {/*  Background Video */}
       <video
         autoPlay
         loop

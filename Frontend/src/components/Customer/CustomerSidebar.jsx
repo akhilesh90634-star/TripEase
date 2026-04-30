@@ -2,23 +2,27 @@ import React, { useState } from "react";
 import { Box, Typography, Divider, IconButton, Tooltip } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dashboard, Luggage, Map, EventNote, CalendarMonth, Groups, ReportProblem, Person,
-  Settings, KeyboardDoubleArrowLeft, Logout} from "@mui/icons-material";
+  Settings, KeyboardDoubleArrowLeft, Logout,
+  ShoppingCart,
+  Payment,
+  LocalOffer} from "@mui/icons-material";
 
-function Sidebar() {
-  const [isMenuclose, setisMenuclose] = useState(false);
+function CustomerSidebar() {
+ const [isMenuclose, setisMenuclose] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const menuData = [
-    { id: 1, name: "Dashboard", icon: <Dashboard />, path: "/agent" },
-    { id: 2, name: "My Trips", icon: <Luggage />, path: "/agent/trips" },
-    { id: 3, name: "Trip Details", icon: <Map />, path: "/agent/packagedetails" },
-    { id: 4, name: "Daily Updates", icon: <EventNote />, path: "/agent/dailyupdates" },
-    { id: 5, name: "Schedule", icon: <CalendarMonth />, path: "/agent/schedule" },
-    { id: 6, name: "Bookings", icon: <Groups />, path: "/agent/bookings" },
-    { id: 7, name: "Issues", icon: <ReportProblem />, path: "/agent/issues" },
-    { id: 8, name: "Profile", icon: <Person />, path: "/agent/profile" },
-    { id: 9, name: "Settings", icon: <Settings />, path: "/agent/settings" }
+    { id: 1, name: "Dashboard", icon: <Dashboard />, path:"/customer" },
+    { id: 2, name: "Explore Trips", icon: <Luggage />, path: "/customer/trips" },
+    { id: 3, name: "Trip Details", icon: <Map />, path: "/customer/tripdetails" },
+    { id: 4, name: "My Bookings", icon: <EventNote />, path: "/customer/dailyupdates" },
+    { id: 5, name: "Cart", icon: <ShoppingCart />, path: "/customer/mycart" },
+    { id: 6, name: "Payments", icon: <Payment />, path: "/customer/bookings" },
+    { id: 7, name: "Coupons", icon: <LocalOffer />, path: "/customer/coupons" },
+    { id: 8, name: "Issues", icon: <ReportProblem />, path: "/customer/issues" },
+    { id: 9, name: "Help Support", icon: <Person />, path: "/customer/profile" },
+    { id: 10, name: "Settings", icon: <Settings />, path: "/customer/settings" }
   ];
 
  function handleMenu() {
@@ -29,7 +33,7 @@ function Sidebar() {
   localStorage.removeItem("accessToken"); 
 
   navigate("/login", { replace: true }); 
-}  
+}
 
   return (
     <Box
@@ -160,11 +164,11 @@ function Sidebar() {
         {!isMenuclose && (
           <Box>
             <Typography fontSize="14px" fontWeight="bold" color="#fff">
-              Agent
+              Akshay
             </Typography>
 
             <Typography fontSize="12px" sx={{ opacity: 0.7, color: "#cbd5e1" }}>
-              Travel Agent
+              customer
             </Typography>
           </Box>
         )}
@@ -200,4 +204,4 @@ function Sidebar() {
   );
 }
 
-export default Sidebar;
+export default CustomerSidebar

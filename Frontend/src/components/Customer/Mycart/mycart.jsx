@@ -116,68 +116,68 @@ function Mycart() {
                   </p>
 
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "8px" }}>
-  
-  {/* DECREMENT */}
-  <button
-    onClick={() => decreaseQty(item.id)}
-    style={{
-      width: "26px",
-      height: "26px",
-      borderRadius: "50%",
-      border: "1px solid #e0ddd6",
-      background: "#fff",
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontSize: "14px",
-    }}
-  >
-    -
-  </button>
+                
+                {/* DECREMENT */}
+                <button
+                  onClick={() => decreaseQty(item.id)}
+                  style={{
+                    width: "26px",
+                    height: "26px",
+                    borderRadius: "50%",
+                    border: "1px solid #e0ddd6",
+                    background: "#fff",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "14px",
+                  }}
+                >
+                  -
+             </button>
 
-  {/* VALUE */}
-  <span style={{ fontSize: "13px", fontWeight: "500", minWidth: "20px", textAlign: "center" }}>
-    {item.persons}
-  </span>
+                    {/* VALUE */}
+                    <span style={{ fontSize: "13px", fontWeight: "500", minWidth: "20px", textAlign: "center" }}>
+                      {item.persons}
+                    </span>
 
-  {/* INCREMENT */}
-  <button
-    onClick={() => increaseQty(item.id)}
-    style={{
-      width: "26px",
-      height: "26px",
-      borderRadius: "50%",
-      border: "1px solid #e0ddd6",
-      background: "#fff",
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontSize: "14px",
-    }}
-  >
-    +
-  </button>
+                    {/* INCREMENT */}
+                    <button
+                      onClick={() => increaseQty(item.id)}
+                      style={{
+                        width: "26px",
+                        height: "26px",
+                        borderRadius: "50%",
+                        border: "1px solid #e0ddd6",
+                        background: "#fff",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "14px",
+                      }}
+                    >
+                      +
+                    </button>
 
-  {/* REMOVE */}
-  <button
-    onClick={() => removeItem(item.id)}
-    style={{
-      fontSize: "11px",
-      color: "#A32D2D",
-      cursor: "pointer",
-      border: "1px solid #F7C1C1",
-      padding: "3px 10px",
-      borderRadius: "99px",
-      background: "#FCEBEB",
-      marginLeft: "8px",
-    }}
-  >
-    Remove
-  </button>
+                    {/* REMOVE */}
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      style={{
+                        fontSize: "11px",
+                        color: "#A32D2D",
+                        cursor: "pointer",
+                        border: "1px solid #F7C1C1",
+                        padding: "3px 10px",
+                        borderRadius: "99px",
+                        background: "#FCEBEB",
+                        marginLeft: "8px",
+                      }}
+                    >
+                      Remove
+                    </button>
 
-</div>
+                  </div>
                 </div>
               </div>
 
@@ -217,23 +217,23 @@ function Mycart() {
             <span>₹{total}</span>
           </div>
           <button
-  style={{
-    width: "100%",
-    marginTop: "15px",
-    padding: "10px",
-    background: "blue",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer"
-  }}
->
-  Proceed to Checkout
-</button>
-        </div>
-      </div>
-    </div>
-  );
-}
+                style={{
+                  width: "100%",
+                  marginTop: "15px",
+                  padding: "10px",
+                  background: "blue",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer"
+                }}
+              >
+                Proceed to Checkout
+              </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
 
 export default Mycart;
