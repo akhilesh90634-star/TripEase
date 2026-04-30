@@ -31,11 +31,11 @@ function Navbar() {
   ];
 
   return (
-    <>
+    <Box>
       {/* NAVBAR */}
       <nav
         style={{
-          position: "fixed",
+          position: "absolute",
           top: 0,
           left: 0,
           right: 0,
@@ -44,10 +44,7 @@ function Navbar() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "12px 20px",
-          background: "rgba(15, 23, 42, 0.75)",
-          backdropFilter: "blur(14px)",
-          WebkitBackdropFilter: "blur(14px)",
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
+          background: "transparent",            
         }}
       >
         {/* Logo */}
@@ -110,7 +107,7 @@ function Navbar() {
               alt="logo"
               style={{
                 height: "70px",
-                filter: "brightness(0)", // makes it black
+                filter: "brightness(0)", 
                 cursor: "pointer",
               }}
             />
@@ -142,7 +139,7 @@ function Navbar() {
         </Box>
       </Drawer>
 
-      {/* ✅ RESPONSIVE CSS (NO INLINE CONFLICTS) */}
+      {/*  RESPONSIVE CSS */}
       <style>{`
         .desktop-menu {
           display: flex;
@@ -163,7 +160,7 @@ function Navbar() {
           }
         }
       `}</style>
-    </>
+    </Box>
   );
 }
 

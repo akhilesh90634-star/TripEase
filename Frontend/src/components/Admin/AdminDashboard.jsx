@@ -1,24 +1,37 @@
-import React from 'react'
-import NavBar from './landingPage/NavBar'
-import Header from './landingPage/Header'
-import styles from './AdminDashboard.module.css' 
-import { Outlet } from 'react-router-dom'
+import React from "react";
+import { Box } from "@mui/material";
+import AdminSidebar from "./AdminSidebar";
+import { Outlet } from "react-router-dom";
 
-function AdminDashboard() {
+
+function AgentDashboard() {
   return (
-    <div className={styles.container}>
-      <Header/>
-      <div className={styles.main}>
-        <NavBar/>
-        <div style={{flexGrow:1 }}>
+    <Box sx={{
+       height: "80vh", 
+       display: "flex", 
+       flexDirection: "column" 
+       }}
+    >
+      {/* <Headers /> */}
+        <Box sx={{
+          display: "flex", 
+          flex: 1 
+          }}
+        >
+        <AdminSidebar />
+
+        {/* Dashboard */}
+        <Box sx={{ 
+            flex: 1, 
+            p: 2, 
+            background: "#f8fafc" 
+            }}
+          >
           <Outlet/>
-        </div>
-      </div>
-      
-    </div>
-  )
+        </Box>
+      </Box>
+    </Box>
+  );
 }
 
-
-
-export default AdminDashboard
+export default AgentDashboard;
