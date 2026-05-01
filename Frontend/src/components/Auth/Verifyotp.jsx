@@ -11,7 +11,15 @@ function VerifyOtp() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const email = location.state?.email;
+  // EMAIL LOGIC
+  const email =
+    location.state?.email || localStorage.getItem("otpEmail");
+
+  useEffect(() => {
+    if (!email) {
+      navigate("/register");
+    }
+  }, [email, navigate]);
 
   // countdown timer
   useEffect(() => {
@@ -56,7 +64,9 @@ function VerifyOtp() {
         otp: finalOtp
       });
 
-      alert("Verified successfully");
+     alert("Verified successfully");
+
+      localStorage.removeItem("otpEmail");
       navigate("/login");
 
     } catch (err) {
@@ -110,7 +120,6 @@ function VerifyOtp() {
           {timer > 0 ? `Resend OTP in ${timer}s` : "Resend OTP"}
         </Button>
       </Box>
-
     </Box>
   );
 }

@@ -88,7 +88,7 @@ function HeroSection({ setFilteredPackages }) {
     setFilteredPackages(
       packages.filter((item ,ind) =>{
         item.title?.toLowerCase().includes(value.toLowerCase())
-      }
+      } 
         
       )
     );
@@ -108,7 +108,7 @@ function HeroSection({ setFilteredPackages }) {
           height: "100vh",
           overflow: "hidden",
           color: "white",
-           marginTop: "-80px" 
+          //  marginTop: "-10px" 
         }}
       >
         {/* Video */}
@@ -226,7 +226,7 @@ function HeroSection({ setFilteredPackages }) {
         </Box>
       </Box>
 
-      {/* CHIPS (unchanged) */}
+      {/* CHIPS  */}
      <Box sx={{ backgroundColor: "#f5f7fb", pt: 3, pb: 2 }}>
   <Container sx={{ mt: 3 }}>
     <Stack direction="row" spacing={1} flexWrap="wrap">
@@ -249,4 +249,3 @@ function HeroSection({ setFilteredPackages }) {
 }
 
 export default HeroSection;
-//Laxman
