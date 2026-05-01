@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import Landingpage from "./components/LandingPage/Landingpage";
 import Login from "./components/Auth/Login";
@@ -6,7 +7,6 @@ import CustomerDashboard from "./components/Customer/CustomerDashboard";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
-import Verifyotp from "./components/Auth/Verifyotp";
 import Register from "./components/Auth/Register";
 import Mycart from "./components/Customer/Mycart/mycart";
 
@@ -38,8 +38,32 @@ import Users from "./components/Admin/users";
 import Packages from "./components/Admin/Packages";
 
 import CustomerCouponsPage from "./components/Customer/CustomerCouponsPage";
+import SplashScreen from "./components/LandingPage/SplashScreen";
+import Destinations from "./components/Destination/Destinations";
+
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const visited = sessionStorage.getItem("visited");
+
+    if (!visited) {
+      const timer = setTimeout(() => {
+        sessionStorage.setItem("visited", "true");
+        setLoading(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  if (loading) {
+    return <SplashScreen />;
+  }
+
   return (
     <BrowserRouter>
       <Routes>
@@ -49,6 +73,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-otp" element={<Verifyotp />} />
+         <Route path="/destinations" element={<Destinations/>} />
+
+
+        <Route path="/tripdetails" element={<TripDetails />} />
+        <Route path="/mycart" element={<Mycart />} />
         <Route path="/packagedetails" element={<PackageDetails />} />
 
         {/* ADMIN */}
@@ -66,7 +95,7 @@ function App() {
           <Route path="agents" element={<Agentdetails />} />
           <Route path="users" element={<Users />} />
           <Route path="coupons" element={<Coupons />} />
-          <Route path="Discount" element={<Discounts />} />
+          <Route path="discount" element={<Discounts />} />
           <Route path="trip" element={<AdminTrips />} />
           <Route path="detailsoftrips" element={<AdminTripDetails />} />
           <Route path="profile" element={<AdminProfile />} />
