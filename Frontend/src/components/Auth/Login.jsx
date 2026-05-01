@@ -55,7 +55,7 @@ function Login() {
             } else {
               navigate("/customer");
             }
-          }, 1500);
+          }, 1000);
 
       setData({ email: "", password: "" });
       setShowPassword(false);
@@ -72,7 +72,7 @@ function Login() {
 
       <Box
         sx={{
-          minHeight: "100vh",
+          minHeight: "80vh",
           pt: "90px",
           backgroundImage: `
             linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
