@@ -8,7 +8,8 @@ import AdminDashboard from "./components/Admin/AdminDashboard";
 import AgentDashboard from "./components/Agent/AgentDashboard";
 import ProtectedRoutes from "./components/ProtectedRoute/ProtectedRoutes";
 import Register from "./components/Auth/Register";
-import Mycart from "./components/Mycart/mycart";
+import Mycart from "./components/Customer/Mycart/mycart";
+
 import Dashboard from "./components/Agent/AgentLayout/Dashboard";
 import Itinerary from "./components/Agent/AgentLayout/Itinerary";
 import Profile from "./components/Agent/AgentLayout/Profile";
@@ -17,8 +18,9 @@ import Issues from "./components/Agent/AgentLayout/Issues";
 import DailyUpdates from "./components/Agent/AgentLayout/DailyUpdates";
 import Trip from "./components/Agent/AgentLayout/Trip";
 import PackageDetails from "./components/Agent/AgentLayout/PackageDetails";
-import TripDetails from "./components/Tripdetails/TripDetails";
 import Settings from "./components/Agent/AgentLayout/Settings";
+
+import TripDetails from "./components/Customer/Tripdetails/TripDetails";
 
 import DashboardAdmin from "./components/Admin/DashboardAdmin";
 import Schedule from "./components/Admin/Schedules";
@@ -35,6 +37,7 @@ import Agentdetails from "./components/Admin/Agentdetails";
 import Users from "./components/Admin/users";
 import Packages from "./components/Admin/Packages";
 
+import CustomerCouponsPage from "./components/Customer/CustomerCouponsPage";
 import SplashScreen from "./components/LandingPage/SplashScreen";
 import Destinations from "./components/Destination/Destinations";
 
@@ -69,6 +72,7 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-otp" element={<Verifyotp />} />
          <Route path="/destinations" element={<Destinations/>} />
 
 
@@ -109,7 +113,12 @@ function App() {
               <CustomerDashboard />
             </ProtectedRoutes>
           }
-        />
+        >
+          <Route index element={<h2>Welcome Customer</h2>} />
+          <Route path="tripdetails" element={<TripDetails />} />
+          <Route path="mycart" element={<Mycart />} />
+          <Route path="coupons" element={<CustomerCouponsPage />} />
+        </Route>
 
         {/* AGENT */}
         <Route
