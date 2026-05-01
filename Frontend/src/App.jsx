@@ -40,6 +40,7 @@ import Packages from "./components/Admin/Packages";
 import CustomerCouponsPage from "./components/Customer/CustomerCouponsPage";
 import SplashScreen from "./components/LandingPage/SplashScreen";
 import Destinations from "./components/Destination/Destinations";
+import VerifyOtp from "./components/Auth/Verifyotp";
 
 
 function App() {
@@ -72,7 +73,7 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/verify-otp" element={<Verifyotp />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
          <Route path="/destinations" element={<Destinations/>} />
 
 
