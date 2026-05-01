@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import {Box,TextField,Button,Typography,Card,Link,Grid,IconButton,InputAdornment,
-  Snackbar,Alert} from "@mui/material";
+import {
+  Box, TextField, Button, Typography, Card, Grid,
+  IconButton, InputAdornment, Snackbar, Alert,
+  Dialog, DialogContent
+} from "@mui/material";
+
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../LandingPage/Navbar";
 import api from "../api/Api";
+import VerifyOtp from "./Verifyotp";
 
 function Register() {
   const navigate = useNavigate();
@@ -22,187 +27,134 @@ function Register() {
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState("");
   const [type, setType] = useState("error");
+  const [loading, setLoading] = useState(false);
+  const [openOtp, setOpenOtp] = useState(false);
 
   function handleChange(e) {
     setData({ ...data, [e.target.name]: e.target.value });
   }
 
-async function handleRegister() {
-  if (!data.name || !data.email || !data.mobile || !data.password || !data.confirmPassword) {
-    setMsg("Please fill all fields");
-    setType("error");
-    setOpen(true);
-    return;
-  }
-
-  if (data.password !== data.confirmPassword) {
-    setMsg("Passwords do not match");
-    setType("error");
-    setOpen(true);
-    return;
-  }
-
-  try {
-    const res = await api.post("/auth/register", {   
-      name: data.name,
-      email: data.email,
-      mobile: data.mobile,
-      password: data.password
-    });
-
-    setMsg("OTP sent to your email");   
-    setType("success");
-    setOpen(true);
-
-    //  going to OTP page
-
-    setTimeout(() => {
-      navigate("/verify-otp", { state: { email: data.email } });
-    }, 1000);
-
-  } catch (err) {
-    const msg = err.response?.data?.message || "";
-
-    if (msg.toLowerCase().includes("email")) {
-      setMsg("Email already exists");
-    } 
-    else if (msg.toLowerCase().includes("mobile")) {
-      setMsg("Mobile number already exists");
-    } 
-    else {
-      setMsg("User already exists");
+  async function handleRegister() {
+    if (!data.name || !data.email || !data.mobile || !data.password || !data.confirmPassword) {
+      setMsg("Please fill all fields");
+      setType("error");
+      setOpen(true);
+      return;
     }
 
-    setType("error");
-    setOpen(true);
+    if (data.password !== data.confirmPassword) {
+      setMsg("Passwords do not match");
+      setType("error");
+      setOpen(true);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await api.post("/auth/register", {
+        name: data.name,
+        email: data.email,
+        mobile: data.mobile,
+        password: data.password
+      });
+
+      localStorage.setItem("accessToken", res.data.token);
+      localStorage.setItem("otpEmail", data.email);
+
+      setMsg("OTP sent to your email");
+      setType("success");
+      setOpen(true);
+
+      setTimeout(() => {
+        setOpenOtp(true);
+      }, 800);
+
+    } catch (err) {
+      const msg = err.response?.data?.message || "";
+
+      if (msg.toLowerCase().includes("email")) {
+        setMsg("Email already exists");
+      } else if (msg.toLowerCase().includes("mobile")) {
+        setMsg("Mobile number already exists");
+      } else {
+        setMsg("User already exists");
+      }
+
+      setType("error");
+      setOpen(true);
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
   return (
     <div>
       <Navbar />
+
       <Box
         sx={{
-          minHeight: "83vh",
-          pt: { xs: 6, md: 3, lg: 13.7 },
+          minHeight: "100vh",
+          pt: { xs: 10, md: 12 }, 
           backgroundImage: `
-            linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+            linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
             url('/Register.png')
           `,
           backgroundSize: "cover",
-          backgroundPosition: "center"
+          backgroundPosition: "center",
+          display: "flex",
+          alignItems: "center"
         }}
       >
-        <Grid
-          container
-          sx={{
-            height: "100%",
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" }, 
-            justifyContent: "start",
-            alignContent: "center"
-          }}
-        >
+        <Grid container>
 
           {/* LEFT SIDE */}
-          <Grid
-            item
-            xs={12}
-            md={6}
+          <Grid item xs={12} md={6}
             sx={{
+              color: "white",
+              p: 5,
               display: "flex",
               flexDirection: "column",
-              justifyContent: "flex-start",
-              mt: "120px",
-              textAlign: "center",
-              px: 8,
-              color: "#fff"
+              justifyContent: "start"
             }}
           >
-            <Typography
-              variant="h3"
-              fontWeight="bold"
-              sx={{
-                textShadow: "2px 2px 10px rgba(0,0,0,0.7)",
-                textAlign: "center"
-              }}
-            >
+            <Typography variant="h3" fontWeight="bold">
               Your Adventure Starts Here <br />
               <Box component="span" sx={{ fontStyle: "italic" }}>
                 Join TripEase Today
               </Box>
             </Typography>
 
-            <Typography
-              variant="h6"
-              sx={{ mt: 2, maxWidth: 400, fontStyle: "italic" }}
-            >
-              Sign up to discover destinations, <br />
-              plan trips, and travel without limits.
+            <Typography variant="h6" sx={{ mt: 2, maxWidth: 400 }}>
+              Sign up to discover destinations, plan trips, and travel without limits.
             </Typography>
           </Grid>
 
           {/* RIGHT SIDE */}
-          <Grid
-            item
-            xs={12}
-            md={6}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mt: { xs: 3, md: 0 },
-              mb: { xs: 3, md: 0 }
-            }}
-          >
-            <Card
+          <Grid item xs={12} md={6}
               sx={{
-                p: 3,
-                width: { xs: "70%", md: 400 },
-                borderRadius: 4,
-                backgroundColor: "rgba(255,255,255,0.9)",
-                backdropFilter: "blur(20px)",
-                boxShadow: "0 8px 30px rgba(0,0,0,0.3)"
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-start",   
+                pt: { xs: 2, md:0 },       
               }}
             >
-              <Typography variant="h5" textAlign="center" mb={1}>
+            <Card sx={{ p: 4, width: 400, borderRadius: 4, marginTop:"4px"}}>
+
+              <Typography variant="h5" textAlign="center">
                 Create Account
               </Typography>
 
-              <TextField
-                fullWidth
-                label="Full Name"
-                name="name"
-                margin="normal"
-                value={data.name}
-                onChange={handleChange}
-              />
+              <TextField fullWidth label="Full Name" name="name" margin="normal" onChange={handleChange} />
+              <TextField fullWidth label="Email" name="email" margin="normal" onChange={handleChange} />
+              <TextField fullWidth label="Mobile" name="mobile" margin="normal" onChange={handleChange} />
 
+              {/* Password */}
               <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                margin="normal"
-                value={data.email}
-                onChange={handleChange}
-              />
-
-              <TextField
-                fullWidth
-                label="Mobile"
-                name="mobile"
-                margin="normal"
-                value={data.mobile}
-                onChange={handleChange}
-              />
-
-              <TextField
-                fullWidth
-                label="Password"
+                fullWidth label="Password"
                 type={showPassword ? "text" : "password"}
                 name="password"
                 margin="normal"
-                value={data.password}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -215,13 +167,12 @@ async function handleRegister() {
                 }}
               />
 
+              {/* Confirm Password */}
               <TextField
-                fullWidth
-                label="Confirm Password"
+                fullWidth label="Confirm Password"
                 type={showConfirm ? "text" : "password"}
                 name="confirmPassword"
                 margin="normal"
-                value={data.confirmPassword}
                 onChange={handleChange}
                 InputProps={{
                   endAdornment: (
@@ -237,38 +188,28 @@ async function handleRegister() {
               <Button
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 2 }}
                 onClick={handleRegister}
               >
-                Register
+                {loading ? "Sending OTP..." : "Register"}
               </Button>
 
-              <Typography textAlign="center">
-                Already have an account?{" "}
-                <Link component="button" onClick={() => navigate("/login")}>
-                  Login
-                </Link>
-              </Typography>
             </Card>
           </Grid>
         </Grid>
 
-       <Snackbar
-            open={open}
-            autoHideDuration={3000}
-            onClose={() => setOpen(false)}
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            sx={{
-              position: "fixed",
-              bottom: 16,
-              left: 16
-            }}
-          >
-            <Alert severity={type} onClose={() => setOpen(false)}>
-              {msg}
-            </Alert>
-          </Snackbar>
+        {/* SNACKBAR */}
+        <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)}>
+          <Alert severity={type}>{msg}</Alert>
+        </Snackbar>
       </Box>
+
+      {/* OTP DIALOG */}
+      <Dialog open={openOtp} maxWidth="xs" fullWidth>
+        <DialogContent>
+          <VerifyOtp />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
