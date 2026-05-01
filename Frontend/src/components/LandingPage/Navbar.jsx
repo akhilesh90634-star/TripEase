@@ -23,8 +23,8 @@ function Navbar() {
   };
 
   const menuItems = [
+    {name:"Home", path:"/"},
     { name: "Destinations", path: "/destinations" },
-    { name: "Packages", path: "/packages" },
     { name: "About Us", path: "/about" },
     { name: "Sign Up", path: "/register" },
     { name: "Login", path: "/login" },
@@ -32,7 +32,7 @@ function Navbar() {
 
   return (
     <Box>
-      {/* NAVBAR */}
+    
       <nav
         style={{
           position: "absolute",

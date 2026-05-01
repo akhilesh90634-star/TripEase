@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import { Box, Typography, Divider, IconButton, Tooltip } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dashboard, Luggage, Map, EventNote, CalendarMonth, Groups, ReportProblem, Person,
-  Settings, KeyboardDoubleArrowLeft, Logout,People, Discount,LocalOffer,
-  Hotel,
-  HotelSharp,
-  Home,
-  CardTravel} from "@mui/icons-material";
+  Settings, KeyboardDoubleArrowLeft, Logout,People, Discount,LocalOffer,Hotel,HotelSharp,Home,CardTravel} from "@mui/icons-material";
 
 function AdminSidebar() {
   const [isMenuclose, setisMenuclose] = useState(false);
@@ -34,11 +30,11 @@ function AdminSidebar() {
   setisMenuclose(!isMenuclose);
 }
 
-  function handleLogout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-  }
+ function handleLogout() {
+  localStorage.removeItem("accessToken"); 
+
+  navigate("/login", { replace: true }); 
+}  
 
   return (
     <Box

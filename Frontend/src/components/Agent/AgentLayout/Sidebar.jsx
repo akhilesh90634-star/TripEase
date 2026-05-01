@@ -26,10 +26,10 @@ function Sidebar() {
 }
 
   function handleLogout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-  }
+  localStorage.removeItem("accessToken"); 
+
+  navigate("/login", { replace: true }); 
+}  
 
   return (
     <Box
