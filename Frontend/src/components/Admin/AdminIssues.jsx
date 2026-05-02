@@ -60,14 +60,6 @@ return(
 
 </Grid>
 
-{/* Header */}
-<Stack direction="row" justifyContent="right" mb={2}>
-
-<Button variant="contained">
-Add Issue
-</Button>
-</Stack>
-
 <TableContainer component={Paper} sx={{borderRadius:3}}>
 <Table>
 <TableHead>

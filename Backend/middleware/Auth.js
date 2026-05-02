@@ -140,7 +140,7 @@ async function adminAuth(req, res, next) {
 }
 
 
-// USER OR ADMIN (🔥 important)
+// USER OR ADMIN
 async function userOrAdminAuth(req, res, next) {
   const result = await verifyToken(req);
 

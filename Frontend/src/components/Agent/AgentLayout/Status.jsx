@@ -28,7 +28,7 @@ const trips = [
   }
 ];
 
-function Trip() {
+function Status() {
   return (
     <Box
       sx={{
@@ -136,9 +136,21 @@ function Trip() {
           >
             View Details
           </Button>
+
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{
+              ml: 2,
+              borderRadius: 2,
+              textTransform: "none"
+            }}
+          >
+            Status
+          </Button>
         </Paper>
       ))}
     </Box>
   );
 }
-export default Trip;
+export default Status;

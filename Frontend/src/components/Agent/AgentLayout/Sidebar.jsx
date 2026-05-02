@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Box, Typography, Divider, IconButton, Tooltip } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Dashboard, Luggage, Map, EventNote, CalendarMonth, Groups, ReportProblem, Person,
-  Settings, KeyboardDoubleArrowLeft, Logout} from "@mui/icons-material";
+  Settings, KeyboardDoubleArrowLeft, Logout,
+  Report} from "@mui/icons-material";
 
 function Sidebar() {
   const [isMenuclose, setisMenuclose] = useState(false);
@@ -11,14 +12,13 @@ function Sidebar() {
 
   const menuData = [
     { id: 1, name: "Dashboard", icon: <Dashboard />, path: "/agent" },
-    { id: 2, name: "My Trips", icon: <Luggage />, path: "/agent/trips" },
-    { id: 3, name: "Trip Details", icon: <Map />, path: "/agent/packagedetails" },
-    { id: 4, name: "Daily Updates", icon: <EventNote />, path: "/agent/dailyupdates" },
-    { id: 5, name: "Schedule", icon: <CalendarMonth />, path: "/agent/schedule" },
-    { id: 6, name: "Bookings", icon: <Groups />, path: "/agent/bookings" },
-    { id: 7, name: "Issues", icon: <ReportProblem />, path: "/agent/issues" },
-    { id: 8, name: "Profile", icon: <Person />, path: "/agent/profile" },
-    { id: 9, name: "Settings", icon: <Settings />, path: "/agent/settings" }
+    { id: 2, name: "Trip Details", icon: <Map />, path: "/agent/packagedetails" },
+    { id: 3, name: "Daily Updates", icon: <EventNote />, path: "/agent/dailyupdates" },
+    { id: 4, name: "Schedule", icon: <CalendarMonth />, path: "/agent/schedule" },
+    { id: 5, name: "Clients", icon: <Groups />, path: "/agent/clients" },
+    { id: 6, name: "Issues", icon: <ReportProblem />, path: "/agent/issues" },
+    { id: 7, name: "Profile", icon: <Person />, path: "/agent/profile" },
+    // { id: 8, name: "Settings", icon: <Settings />, path: "/agent/settings" }
   ];
 
  function handleMenu() {

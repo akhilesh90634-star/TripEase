@@ -1,26 +1,55 @@
-import React from "react";
-import {Box,Typography,Card,CardContent,Grid} from "@mui/material";
+import React from 'react';
+import TripDetails from '../Customer/Tripdetails/TripDetails';
+import { Box, Button } from "@mui/material";
 
-export default function AdminTripDetails(){
-return(
-<Box p={3}>
-<Typography variant="h5" mb={2}>Trip Details</Typography>
-<Card>
-<CardContent>
-<Grid container spacing={2}>
-<Grid item xs={6}>
-<Typography>Trip: Manali Adventure</Typography>
-<Typography>Duration: 4 Days</Typography>
-<Typography>Price: ₹12,499</Typography>
-</Grid>
-<Grid item xs={6}>
-<Typography>Start: 24 May</Typography>
-<Typography>End: 27 May</Typography>
-<Typography>Status: Active</Typography>
-</Grid>
-</Grid>
-</CardContent>
-</Card>
-</Box>
-)
+function AdminTripDetails() {
+
+  function handleAdd() {
+    console.log("Add Product");
+  }
+
+  function handleEdit() {
+    console.log("Edit Trip");
+  }
+
+  function handleDelete() {
+    var confirmDelete = window.confirm("Delete this trip?");
+    if (confirmDelete) {
+      console.log("Deleted");
+    }
+  }
+
+  return (
+    <Box>
+
+      {/*Buttons */}
+      <Box display="flex" justifyContent="flex-end" gap={2} p={2}>
+        <Button variant="contained" color="success" onClick={handleAdd}>
+          Add
+        </Button>
+
+        <Button variant="contained" color="warning" onClick={handleEdit}>
+          Edit
+        </Button>
+
+        <Button variant="contained" color="error" onClick={handleDelete}>
+          Delete
+        </Button>
+      </Box>
+
+      {/*  hide Explore & Cart */}
+      <Box
+        sx={{
+          "& .navbar .link": {
+            display: "none"
+          }
+        }}
+      >
+        <TripDetails />
+      </Box>
+
+    </Box>
+  );
 }
+
+export default AdminTripDetails;

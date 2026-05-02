@@ -1,10 +1,6 @@
 import React,{useState} from "react";
-import {
-Box,Typography,Grid,Card,CardContent,
-Table,TableBody,TableCell,TableContainer,
-TableHead,TableRow,Paper,Button,
-IconButton,Dialog,DialogTitle,
-DialogContent,DialogActions,TextField,
+import {Box,Typography,Grid,Card,CardContent,Table,TableBody,TableCell,TableContainer,
+TableHead,TableRow,Paper,Button,IconButton,Dialog,DialogTitle,DialogContent,DialogActions,TextField,
 Stack,Chip
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
@@ -20,24 +16,37 @@ const [open,setOpen]=useState(false)
 const [edit,setEdit]=useState(null)
 const [form,setForm]=useState({name:"",destination:"",duration:"",price:"",status:"Upcoming"})
 
-const handleOpen=(row,i)=>{
+function handleOpen(row,i){
 if(row){setForm(row);setEdit(i)}
 else{setForm({name:"",destination:"",duration:"",price:"",status:"Upcoming"});setEdit(null)}
 setOpen(true)
 }
 
-const handleSave=()=>{
-if(edit!==null){
-const d=[...rows];
-d[edit]=form;
-setRows(d)
-}else{
-setRows([...rows,form])
-}
-setOpen(false)
-}
+function handleSave(){
+        if(edit!==null){
+        const d=[...rows];
+        d[edit]=form;
+        setRows(d)
+        }else{
+        setRows([...rows,form])
+        }
+        setOpen(false)
+        }
 
-const handleDelete=(i)=>setRows(rows.filter((_,x)=>x!==i))
+function handleDelete (i){
+  const updatedRows = rows.filter((item, index) => {
+
+    if (index !== i) {
+      return true;
+    } else {
+      return false;
+    }
+
+  });
+
+  setRows(updatedRows);
+
+};
 
 return(
 <Box p={3}>
