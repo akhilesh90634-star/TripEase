@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Paper, Grid, Chip} from "@mui/material";
 
-function Bookings() {
+function ClientDetails() {
 
   const clientsData = [
     {
@@ -100,4 +100,4 @@ function Bookings() {
   );
 }
 
-export default Bookings;
+export default ClientDetails;

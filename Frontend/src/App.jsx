@@ -13,12 +13,11 @@ import Mycart from "./components/Customer/Mycart/mycart";
 import Dashboard from "./components/Agent/AgentLayout/Dashboard";
 import Itinerary from "./components/Agent/AgentLayout/Itinerary";
 import Profile from "./components/Agent/AgentLayout/Profile";
-import Bookings from "./components/Agent/AgentLayout/Bookings";
+import ClientDetails from "./components/Agent/AgentLayout/Client Details";
 import Issues from "./components/Agent/AgentLayout/Issues";
 import DailyUpdates from "./components/Agent/AgentLayout/DailyUpdates";
-import Trip from "./components/Agent/AgentLayout/Trip";
 import PackageDetails from "./components/Agent/AgentLayout/PackageDetails";
-import Settings from "./components/Agent/AgentLayout/Settings";
+// import Settings from "./components/Agent/AgentLayout/Settings";
 
 import TripDetails from "./components/Customer/Tripdetails/TripDetails";
 
@@ -41,6 +40,8 @@ import CustomerCouponsPage from "./components/Customer/CustomerCouponsPage";
 import SplashScreen from "./components/LandingPage/SplashScreen";
 import Destinations from "./components/Destination/Destinations";
 import VerifyOtp from "./components/Auth/Verifyotp";
+
+
 
 
 function App() {
@@ -91,19 +92,18 @@ function App() {
           }
         >
           <Route index element={<DashboardAdmin />} />
-          <Route path="schedule" element={<Schedule />} />
-          <Route path="hotels" element={<Hotels />} />
+          {/* <Route path="schedule" element={<Schedule />} /> */}
+          {/* <Route path="hotels" element={<Hotels />} /> */}
           <Route path="agents" element={<Agentdetails />} />
           <Route path="users" element={<Users />} />
-          <Route path="coupons" element={<Coupons />} />
-          <Route path="discount" element={<Discounts />} />
+          {/* <Route path="coupons" element={<Coupons />} />
+          <Route path="discount" element={<Discounts />} /> */}
           <Route path="trip" element={<AdminTrips />} />
           <Route path="detailsoftrips" element={<AdminTripDetails />} />
           <Route path="profile" element={<AdminProfile />} />
           <Route path="issues" element={<AdminIssues />} />
           <Route path="dailyupdates" element={<AdminDailyUpdates />} />
           <Route path="bookings" element={<AdminBookings />} />
-          <Route path="packages" element={<Packages />} />
         </Route>
 
         {/* CUSTOMER */}
@@ -133,12 +133,11 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="schedule" element={<Itinerary />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="bookings" element={<Bookings />} />
+          <Route path="clients" element={<ClientDetails />} />
           <Route path="issues" element={<Issues />} />
           <Route path="dailyupdates" element={<DailyUpdates />} />
           <Route path="packagedetails" element={<PackageDetails />} />
-          <Route path="trips" element={<Trip />} />
-          <Route path="settings" element={<Settings />} />
+          {/* <Route path="settings" element={<Settings />} /> */}
         </Route>
 
       </Routes>

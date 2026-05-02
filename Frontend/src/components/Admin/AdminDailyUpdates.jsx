@@ -1,130 +1,102 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import {
-Box,Typography,Grid,Card,CardContent,
-Table,TableBody,TableCell,TableContainer,
-TableHead,TableRow,Paper,Stack,
-TextField,Button,Chip,IconButton
+  Box, Typography, Grid, Card, CardContent,
+  Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, Chip
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
 
+function AdminDailyUpdates() {
 
- function AdminDailyUpdates(){
+  const [rows] = useState([
+    { title: "Road Closed", category: "Travel", date: "21 May" },
+    { title: "Weather Alert", category: "Safety", date: "22 May" },
+    { title: "Festival Traffic", category: "Traffic", date: "23 May" }
+  ]);
 
-const [rows]=useState([
-{title:"Road Closed",category:"Travel",date:"21 May",status:"Active"},
-{title:"Weather Alert",category:"Safety",date:"22 May",status:"Active"},
-{title:"Festival Traffic",category:"Traffic",date:"23 May",status:"Inactive"}
-])
+  return (
+    <Box p={3}>
+      <Typography variant="h5" mb={2}>Daily Updates</Typography>
 
-return(
-<Box p={3}>
-<Typography variant="h5" mb={2}>Daily Updates</Typography>
+      {/* Stat Cards */}
+      <Grid container spacing={2} mb={3}>
 
-{/* Stat Cards */}
-<Grid container spacing={2} mb={3}>
+        <Grid item xs={12} md={3}>
+          <Card>
+            <CardContent>
+              <Typography>Total Updates</Typography>
+              <Typography variant="h6">{rows.length}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
 
-<Grid item xs={12} md={3}>
-<Card sx={{borderRadius:3}}>
-<CardContent>
-<Typography color="text.secondary">Total Updates</Typography>
-<Typography variant="h5" fontWeight={700}>24</Typography>
-</CardContent>
-</Card>
-</Grid>
+        <Grid item xs={12} md={3}>
+          <Card>
+            <CardContent>
+              <Typography>Travel</Typography>
+              <Typography variant="h6">
+                {rows.filter(r => r.category === "Travel").length}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
 
-<Grid item xs={12} md={3}>
-<Card sx={{borderRadius:3}}>
-<CardContent>
-<Typography color="text.secondary">Travel</Typography>
-<Typography variant="h5" fontWeight={700}>10</Typography>
-</CardContent>
-</Card>
-</Grid>
+        <Grid item xs={12} md={3}>
+          <Card>
+            <CardContent>
+              <Typography>Safety</Typography>
+              <Typography variant="h6">
+                {rows.filter(r => r.category === "Safety").length}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
 
-<Grid item xs={12} md={3}>
-<Card sx={{borderRadius:3}}>
-<CardContent>
-<Typography color="text.secondary">Safety</Typography>
-<Typography variant="h5" fontWeight={700}>8</Typography>
-</CardContent>
-</Card>
-</Grid>
+        <Grid item xs={12} md={3}>
+          <Card>
+            <CardContent>
+              <Typography>Traffic</Typography>
+              <Typography variant="h6">
+                {rows.filter(r => r.category === "Traffic").length}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
 
-<Grid item xs={12} md={3}>
-<Card sx={{borderRadius:3}}>
-<CardContent>
-<Typography color="text.secondary">Traffic</Typography>
-<Typography variant="h5" fontWeight={700}>6</Typography>
-</CardContent>
-</Card>
-</Grid>
+      </Grid>
 
-</Grid>
+      {/* Table */}
+      <TableContainer component={Paper}>
+        <Table>
 
-{/* Header */}
-<Stack direction="row" justifyContent="right" mb={2}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Title</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Date</TableCell>
+            </TableRow>
+          </TableHead>
 
-<Button variant="contained">
-Add Update
-</Button>
-</Stack>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TableRow key={index}>
 
-<TableContainer component={Paper} sx={{borderRadius:3}}>
-<Table>
+                <TableCell>{row.title}</TableCell>
 
-<TableHead>
-<TableRow>
-<TableCell>Title</TableCell>
-<TableCell>Category</TableCell>
-<TableCell>Date</TableCell>
-<TableCell>Status</TableCell>
-<TableCell>Actions</TableCell>
-</TableRow>
-</TableHead>
+                <TableCell>
+                  <Chip label={row.category} color="primary" size="small" />
+                </TableCell>
 
-<TableBody>
-{rows.map((row,index)=>(
-<TableRow key={index}>
+                <TableCell>{row.date}</TableCell>
 
-<TableCell>{row.title}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
 
-<TableCell>
-<Chip
-label={row.category}
-color="primary"
-size="small"
-/>
-</TableCell>
+        </Table>
+      </TableContainer>
 
-<TableCell>{row.date}</TableCell>
-
-<TableCell>
-<Chip
-label={row.status}
-color={row.status==="Active"?"success":"default"}
-size="small"
-/>
-</TableCell>
-
-<TableCell>
-<IconButton size="small">
-<Edit/>
-</IconButton>
-
-<IconButton size="small" color="error">
-<Delete/>
-</IconButton>
-</TableCell>
-
-</TableRow>
-))}
-</TableBody>
-
-</Table>
-</TableContainer>
-
-</Box>
-)
+    </Box>
+  );
 }
 
 export default AdminDailyUpdates;
