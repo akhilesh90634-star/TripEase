@@ -67,7 +67,7 @@ const updateUser = async (req, res) => {
       return res.status(403).json({ message: "Not allowed" });
     }
 
-    // 🔐 prevent role change by normal users
+    // prevent role change by normal users
     if (req.userRole !== "admin") {
       delete req.body.role;
     }

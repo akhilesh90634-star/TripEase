@@ -1,46 +1,62 @@
-const UserModel = require("../model/UserModel");
-const { AccessToken, RefreshToken } = require("../utils/Token");
+const UserModel = require("../model/usermodel");
+const OtpModel = require("../model/OtpModel");
+const { AccessToken, RefreshToken } = require("../utils/token");
 const transporter = require("../config/mailer");
 
-// temporary store
-const tempUsers = {};
 
+// ===================== SEND OTP =====================
+async function sendOtp(req, res) {
+  const { email } = req.body;
 
-// REGISTER
-async function registerUser(req, res) {
   try {
-    const data = req.body;
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required"
+      });
+    }
 
-    const exists = await UserModel.findOne({
-      email: data.email
-    });
-
+    // ❌ Block if already registered
+    const exists = await UserModel.findOne({ email });
     if (exists) {
       return res.status(400).json({
-        message: "Email already exists"
+        success: false,
+        message: "Email already registered"
+      });
+    }
+
+    // 🔥 Check existing OTP record
+    const existingOtp = await OtpModel.findOne({ email });
+
+    // ❌ Block resend if already verified
+    if (existingOtp && existingOtp.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Email already verified"
       });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // store temporarily
-    tempUsers[data.email] = {
-      name: data.name,
-      email: data.email,
-      password: data.password,
-      mobile: data.mobile,
-      role: "user",
-      otp,
-      otpExpiry: Date.now() + 10 * 60 * 1000
-    };
+    // 🔥 Upsert OTP
+    await OtpModel.findOneAndUpdate(
+      { email },
+      {
+        email,
+        otp,
+        isVerified: false,
+        createdAt: new Date()
+      },
+      { upsert: true, new: true }
+    );
 
     await transporter.sendMail({
       from: process.env.EMAIL,
-      to: data.email,
-      subject: "Verify Your Account",
+      to: email,
+      subject: "Verify Your Email",
       html: `
         <div style="font-family:sans-serif">
-          <h2>TripEase OTP Verification</h2>
+          <h2>TripEase Email Verification</h2>
           <p>Your OTP is:</p>
           <h1>${otp}</h1>
           <p>This OTP is valid for 10 minutes</p>
@@ -48,141 +64,189 @@ async function registerUser(req, res) {
       `
     });
 
-    res.json({
-      message: "OTP sent to email"
+    return res.json({
+      success: true,
+      message: "OTP sent successfully"
     });
 
   } catch (err) {
-    console.log("REGISTER ERROR:", err);
-
-    res.status(500).json({
-      message: "Registration failed"
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong"
     });
   }
 }
 
 
-// VERIFY OTP
+// ===================== VERIFY OTP =====================
 async function verifyOtp(req, res) {
+  const { email, otp } = req.body;
+
   try {
-    const { email, otp } = req.body;
+    const record = await OtpModel.findOne({ email });
 
-    const tempUser = tempUsers[email];
-
-    if (
-      !tempUser ||
-      String(tempUser.otp) !== String(otp) ||
-      tempUser.otpExpiry < Date.now()
-    ) {
+    if (!record || record.otp !== otp) {
       return res.status(400).json({
+        success: false,
         message: "Invalid or expired OTP"
       });
     }
 
-    await UserModel.create({
-      name: tempUser.name,
-      email: tempUser.email,
-      password: tempUser.password,
-      mobile: tempUser.mobile,
-      role: "user",
-      isVerified: true
-    });
+    record.isVerified = true;
+    await record.save();
 
-    delete tempUsers[email];
-
-    res.json({
-      message: "Account verified successfully"
+    return res.json({
+      success: true,
+      message: "Email verified successfully"
     });
 
   } catch (err) {
-    console.log("VERIFY OTP ERROR:", err);
-
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Verification failed"
     });
   }
 }
 
 
-// RESEND OTP
+// ===================== RESEND OTP =====================
 async function resendOtp(req, res) {
+  const { email } = req.body;
+
   try {
-    const { email } = req.body;
+    const record = await OtpModel.findOne({ email });
 
-    const tempUser = tempUsers[email];
-
-    if (!tempUser) {
+    if (!record) {
       return res.status(404).json({
-        message: "User not found"
+        success: false,
+        message: "Please verify email again"
+      });
+    }
+
+    // ❌ Block resend if already verified
+    if (record.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Email already verified"
       });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    tempUser.otp = otp;
-    tempUser.otpExpiry = Date.now() + 10 * 60 * 1000;
-
-    tempUsers[email] = tempUser;
+    record.otp = otp;
+    record.createdAt = new Date();
+    await record.save();
 
     await transporter.sendMail({
       from: process.env.EMAIL,
       to: email,
-      subject: "Resend OTP - Verify Your Account",
+      subject: "Resend OTP",
       html: `
         <div style="font-family:sans-serif">
           <h2>TripEase OTP Verification</h2>
           <p>Your new OTP is:</p>
           <h1>${otp}</h1>
-          <p>This OTP is valid for 10 minutes</p>
         </div>
       `
     });
 
-    res.json({
+    return res.json({
+      success: true,
       message: "OTP resent successfully"
     });
 
   } catch (err) {
-    console.log("RESEND OTP ERROR:", err);
-
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to resend OTP"
     });
   }
 }
 
 
-// LOGIN
-async function login(req, res) {
-  try {
-    const { email, password } = req.body;
+// ===================== REGISTER =====================
+async function registerUser(req, res) {
+  const { name, email, password, mobile } = req.body;
 
+  try {
+    const record = await OtpModel.findOne({ email });
+
+    if (!record || !record.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Please verify your email first"
+      });
+    }
+
+    const exists = await UserModel.findOne({ email });
+
+    if (exists) {
+      return res.status(400).json({
+        success: false,
+        message: "Email already registered"
+      });
+    }
+
+    await UserModel.create({
+      name,
+      email,
+      password,
+      mobile,
+      role: "user",
+      isVerified: true
+    });
+
+    // 🔥 Clean OTP record
+    await OtpModel.deleteOne({ email });
+
+    return res.json({
+      success: true,
+      message: "Registration successful"
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Registration failed"
+    });
+  }
+}
+
+
+// ===================== LOGIN =====================
+async function login(req, res) {
+  const { email, password } = req.body;
+
+  try {
     const user = await UserModel.findOne({ email }).select("+password");
 
     if (!user || user.password !== password) {
       return res.status(401).json({
+        success: false,
         message: "Invalid credentials"
       });
     }
 
-    res.json({
+    return res.json({
+      success: true,
       accessToken: AccessToken(user),
       refreshToken: RefreshToken(user),
       role: user.role
     });
 
   } catch (err) {
-    console.log("LOGIN ERROR:", err);
-
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Login failed"
     });
   }
 }
 
+
 module.exports = {
-  registerUser,
+  sendOtp,
   verifyOtp,
   resendOtp,
+  registerUser,
   login
 };
