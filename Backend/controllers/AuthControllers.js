@@ -2,6 +2,7 @@ const UserModel = require("../model/usermodel");
 const OtpModel = require("../model/OtpModel");
 const { AccessToken, RefreshToken } = require("../utils/token");
 const transporter = require("../config/mailer");
+const bcrypt = require("bcrypt");
 
 
 // ===================== SEND OTP =====================
@@ -16,7 +17,7 @@ async function sendOtp(req, res) {
       });
     }
 
-    // ❌ Block if already registered
+    // Block if already registered
     const exists = await UserModel.findOne({ email });
     if (exists) {
       return res.status(400).json({
@@ -25,10 +26,10 @@ async function sendOtp(req, res) {
       });
     }
 
-    // 🔥 Check existing OTP record
+    // Check existing OTP record
     const existingOtp = await OtpModel.findOne({ email });
 
-    // ❌ Block resend if already verified
+    // Block resend if already verified
     if (existingOtp && existingOtp.isVerified) {
       return res.status(400).json({
         success: false,
@@ -38,7 +39,7 @@ async function sendOtp(req, res) {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // 🔥 Upsert OTP
+    // Upsert OTP
     await OtpModel.findOneAndUpdate(
       { email },
       {
@@ -123,7 +124,7 @@ async function resendOtp(req, res) {
       });
     }
 
-    // ❌ Block resend if already verified
+    // Block resend if already verified
     if (record.isVerified) {
       return res.status(400).json({
         success: false,
@@ -187,16 +188,19 @@ async function registerUser(req, res) {
       });
     }
 
+    // HASH PASSWORD
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     await UserModel.create({
       name,
       email,
-      password,
+      password: hashedPassword,
       mobile,
       role: "user",
       isVerified: true
     });
 
-    // 🔥 Clean OTP record
+    // Clean OTP record after registration
     await OtpModel.deleteOne({ email });
 
     return res.json({
@@ -220,7 +224,17 @@ async function login(req, res) {
   try {
     const user = await UserModel.findOne({ email }).select("+password");
 
-    if (!user || user.password !== password) {
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials"
+      });
+    }
+
+    // COMPARE HASHED PASSWORD
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(401).json({
         success: false,
         message: "Invalid credentials"
