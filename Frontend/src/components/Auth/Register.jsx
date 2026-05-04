@@ -1,15 +1,11 @@
 import React, { useState } from "react";
-import {
-  Box, TextField, Button, Typography, Card, Grid,
-  IconButton, InputAdornment, Snackbar, Alert,
-  Dialog, DialogContent
-} from "@mui/material";
-
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { Box, TextField, Button, Typography, Card, Grid, IconButton, InputAdornment, Snackbar, 
+  Alert} from "@mui/material";
+import {Visibility, VisibilityOff, Email, Person, Phone, Lock} from "@mui/icons-material";
 import Navbar from "../LandingPage/Navbar";
-import api from "../api/Api";
-import VerifyOtp from "./Verifyotp";
+import api from "../Api/Api";
+import { useNavigate } from "react-router-dom";
+import EmailOtpVerification from "./EmailOtpVerification";
 
 function Register() {
   const navigate = useNavigate();
@@ -22,69 +18,109 @@ function Register() {
     mobile: ""
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [verified, setVerified] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState("");
-  const [type, setType] = useState("error");
-  const [loading, setLoading] = useState(false);
-  const [openOtp, setOpenOtp] = useState(false);
+  const [type, setType] = useState("success");
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  // REGEX
+  const emailPattern =
+    /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  const mobilePattern = /^[6-9]\d{9}$/;
+
+  const passwordPattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
+
+  // HANDLE CHANGE
   function handleChange(e) {
-    setData({ ...data, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+
+    let err = "";
+
+    if (name === "email" && value && !emailPattern.test(value)) {
+      err = "Email must be validiate";
+    }
+
+    if (name === "mobile" && value && !mobilePattern.test(value)) {
+      err = "Mobile must be 10 digits";
+    }
+
+    if (name === "password" && value && !passwordPattern.test(value)) {
+      err = "Min 6 chars with A-Z, a-z, number & special char";
+    }
+
+    if (name === "confirmPassword" && value !== data.password) {
+      err = "Passwords do not match";
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: err }));
   }
 
-  async function handleRegister() {
-    if (!data.name || !data.email || !data.mobile || !data.password || !data.confirmPassword) {
-      setMsg("Please fill all fields");
+  // VALIDATE ALL
+  function validateAll() {
+    let newErrors = {};
+
+    if (!data.name) newErrors.name = "Name required";
+
+    if (!data.email) newErrors.email = "Email required";
+    else if (!emailPattern.test(data.email))
+      newErrors.email = "Invalid email";
+
+    if (!data.mobile) newErrors.mobile = "Mobile required";
+    else if (!mobilePattern.test(data.mobile))
+      newErrors.mobile = "Invalid mobile";
+
+    if (!data.password) newErrors.password = "Password required";
+    else if (!passwordPattern.test(data.password))
+      newErrors.password = "Weak password";
+
+    if (!data.confirmPassword)
+      newErrors.confirmPassword = "Confirm password required";
+    else if (data.password !== data.confirmPassword)
+      newErrors.confirmPassword = "Passwords mismatch";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      setMsg("Please fill the details");
       setType("error");
       setOpen(true);
-      return;
     }
 
-    if (data.password !== data.confirmPassword) {
-      setMsg("Passwords do not match");
-      setType("error");
-      setOpen(true);
-      return;
-    }
+    return Object.keys(newErrors).length === 0;
+  }
+
+  // REGISTER
+  async function handleRegister() {
+    if (!validateAll()) return;
 
     try {
-      setLoading(true);
-
-      const res = await api.post("/auth/register", {
+      await api.post("/auth/register", {
         name: data.name,
         email: data.email,
-        mobile: data.mobile,
-        password: data.password
+        password: data.password,
+        mobile: data.mobile
       });
 
-      localStorage.setItem("accessToken", res.data.token);
-      localStorage.setItem("otpEmail", data.email);
-
-      setMsg("OTP sent to your email");
+      setMsg("Registration Successful ");
       setType("success");
       setOpen(true);
 
       setTimeout(() => {
-        setOpenOtp(true);
-      }, 800);
+        navigate("/login");
+      }, 1000);
 
     } catch (err) {
-      const msg = err.response?.data?.message || "";
-
-      if (msg.toLowerCase().includes("email")) {
-        setMsg("Email already exists");
-      } else if (msg.toLowerCase().includes("mobile")) {
-        setMsg("Mobile number already exists");
-      } else {
-        setMsg("User already exists");
-      }
-
+      setMsg(err.response?.data?.message || "Registration failed");
       setType("error");
       setOpen(true);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -95,9 +131,9 @@ function Register() {
       <Box
         sx={{
           minHeight: "100vh",
-          pt: { xs: 10, md: 12 }, 
+          pt: 10,
           backgroundImage: `
-            linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+            linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
             url('/Register.png')
           `,
           backgroundSize: "cover",
@@ -108,18 +144,18 @@ function Register() {
       >
         <Grid container>
 
-          {/* LEFT SIDE */}
-          <Grid item xs={12} md={6}
+          {/* LEFT */}
+         <Grid item xs={12} md={6}
             sx={{
               color: "white",
-              p: 5,
+              p: 6,
               display: "flex",
               flexDirection: "column",
               justifyContent: "start"
             }}
           >
-            <Typography variant="h3" fontWeight="bold">
-              Your Adventure Starts Here <br />
+              <Typography variant="h3" fontWeight="bold">
+              Your Adventure Starts Here .
               <Box component="span" sx={{ fontStyle: "italic" }}>
                 Join TripEase Today
               </Box>
@@ -130,33 +166,40 @@ function Register() {
             </Typography>
           </Grid>
 
-          {/* RIGHT SIDE */}
+          {/* RIGHT */}
           <Grid item xs={12} md={6}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "flex-start",   
-                pt: { xs: 2, md:0 },       
-              }}
-            >
-            <Card sx={{ p: 4, width: 400, borderRadius: 4, marginTop:"4px"}}>
-
+            sx={{ display: "flex", justifyContent: "center" }}
+          >
+            <Card sx={{ p: 4, width: 420, borderRadius: 4 }}>
               <Typography variant="h5" textAlign="center">
                 Create Account
               </Typography>
 
-              <TextField fullWidth label="Full Name" name="name" margin="normal" onChange={handleChange} />
-              <TextField fullWidth label="Email" name="email" margin="normal" onChange={handleChange} />
-              <TextField fullWidth label="Mobile" name="mobile" margin="normal" onChange={handleChange} />
+              <TextField fullWidth label="Name" name="name"
+                margin="normal" onChange={handleChange}
+                error={!!errors.name} helperText={errors.name}
+                InputProps={{ startAdornment: <InputAdornment position="start"><Person /></InputAdornment> }}
+              />
 
-              {/* Password */}
-              <TextField
-                fullWidth label="Password"
+              <TextField fullWidth label="Email" name="email"
+                margin="normal" onChange={handleChange}
+                error={!!errors.email} helperText={errors.email}
+                InputProps={{ startAdornment: <InputAdornment position="start"><Email /></InputAdornment> }}
+              />
+
+              <TextField fullWidth label="Mobile" name="mobile"
+                margin="normal" onChange={handleChange}
+                error={!!errors.mobile} helperText={errors.mobile}
+                InputProps={{ startAdornment: <InputAdornment position="start"><Phone /></InputAdornment> }}
+              />
+
+              <TextField fullWidth label="Password"
                 type={showPassword ? "text" : "password"}
-                name="password"
-                margin="normal"
+                name="password" margin="normal"
                 onChange={handleChange}
+                error={!!errors.password} helperText={errors.password}
                 InputProps={{
+                  startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton onClick={() => setShowPassword(!showPassword)}>
@@ -167,14 +210,14 @@ function Register() {
                 }}
               />
 
-              {/* Confirm Password */}
-              <TextField
-                fullWidth label="Confirm Password"
+              <TextField fullWidth label="Confirm Password"
                 type={showConfirm ? "text" : "password"}
-                name="confirmPassword"
-                margin="normal"
+                name="confirmPassword" margin="normal"
                 onChange={handleChange}
+                error={!!errors.confirmPassword} 
+                helperText={errors.confirmPassword}
                 InputProps={{
+                  startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton onClick={() => setShowConfirm(!showConfirm)}>
@@ -185,31 +228,39 @@ function Register() {
                 }}
               />
 
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 2 }}
-                onClick={handleRegister}
-              >
-                {loading ? "Sending OTP..." : "Register"}
-              </Button>
+              {/* OTP */}
+              <EmailOtpVerification
+                email={data.email}
+                onVerified={setVerified}
+                validateAll={validateAll}
+                setMsg={setMsg}
+                setType={setType}
+                setOpen={setOpen}
+              />
+
+              {verified && (
+                <Button fullWidth variant="contained" sx={{ mt: 3 }}
+                  onClick={handleRegister}>
+                  Register
+                </Button>
+              )}
+
+              <Typography textAlign="center" sx={{ mt: 2 }}>
+                Already have an account?{" "}
+                <span style={{ color: "#1976d2", cursor: "pointer" }}
+                  onClick={() => navigate("/login")}>
+                  Login
+                </span>
+              </Typography>
 
             </Card>
           </Grid>
         </Grid>
 
-        {/* SNACKBAR */}
         <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)}>
           <Alert severity={type}>{msg}</Alert>
         </Snackbar>
       </Box>
-
-      {/* OTP DIALOG */}
-      <Dialog open={openOtp} maxWidth="xs" fullWidth>
-        <DialogContent>
-          <VerifyOtp />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

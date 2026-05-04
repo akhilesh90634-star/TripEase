@@ -47,7 +47,7 @@ function Login() {
       setType("success");
       setOpen(true);
 
-          setTimeout(() => {
+         
             if (result.role === "admin") {
               navigate("/admin");
             } else if (result.role === "agent") {
@@ -55,7 +55,7 @@ function Login() {
             } else {
               navigate("/customer");
             }
-          }, 1000);
+           
 
       setData({ email: "", password: "" });
       setShowPassword(false);
