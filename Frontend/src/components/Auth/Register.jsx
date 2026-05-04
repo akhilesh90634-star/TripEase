@@ -1,15 +1,11 @@
 import React, { useState } from "react";
-import {
-  Box, TextField, Button, Typography, Card, Grid,
-  IconButton, InputAdornment, Snackbar, Alert,
-  Dialog, DialogContent
-} from "@mui/material";
-
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import {Box, TextField, Button, Typography, Card, Grid,IconButton, InputAdornment, 
+  Snackbar, Alert} from "@mui/material";
+import {Visibility, VisibilityOff, Email, Person, Phone, Lock} from "@mui/icons-material";
 import Navbar from "../LandingPage/Navbar";
-import api from "../api/Api";
-import VerifyOtp from "./Verifyotp";
+import api from "../Api/Api";
+import { useNavigate } from "react-router-dom";
+import EmailOtpVerification from "./EmailOtpVerification";
 
 function Register() {
   const navigate = useNavigate();
@@ -22,69 +18,148 @@ function Register() {
     mobile: ""
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [verified, setVerified] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [msg, setMsg] = useState("");
-  const [type, setType] = useState("error");
-  const [loading, setLoading] = useState(false);
-  const [openOtp, setOpenOtp] = useState(false);
+  const [type, setType] = useState("success");
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  //  REGEX
+  const emailPattern =
+    /^[a-zA-Z](?!.*\.\.)[a-zA-Z0-9._%+-]{2,}@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+
+  const mobilePattern = /^[6-9]\d{9}$/;
+
+  const passwordPattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+  //  HANDLE CHANGE 
   function handleChange(e) {
-    setData({ ...data, [e.target.name]: e.target.value });
-  }
+    const { name, value } = e.target;
 
-  async function handleRegister() {
-    if (!data.name || !data.email || !data.mobile || !data.password || !data.confirmPassword) {
-      setMsg("Please fill all fields");
-      setType("error");
-      setOpen(true);
-      return;
+    const updatedData = {
+      ...data,
+      [name]: value
+    };
+
+    setData(updatedData);
+
+    let newErrors = { ...errors };
+
+    // NAME
+    if (name === "name") {
+      if (!value.trim()) newErrors.name = "Name required";
+      else if (value.length < 3) newErrors.name = "Min 3 characters";
+      else newErrors.name = "";
     }
 
-    if (data.password !== data.confirmPassword) {
-      setMsg("Passwords do not match");
+    // EMAIL
+    if (name === "email") {
+      if (!emailPattern.test(value)) {
+        newErrors.email = "Email must start with letter & be valid";
+      } else {
+        newErrors.email = "";
+      }
+    }
+
+    // MOBILE
+    if (name === "mobile") {
+      if (!mobilePattern.test(value)) {
+        newErrors.mobile = "Enter valid 10-digit mobile";
+      } else {
+        newErrors.mobile = "";
+      }
+    }
+
+    // PASSWORD
+    if (name === "password") {
+      if (!passwordPattern.test(value)) {
+        newErrors.password =
+          "Min 8 chars with A-Z, a-z, number & special char";
+      } else {
+        newErrors.password = "";
+      }
+    }
+
+    // PASSWORD MATCH
+    if (
+      updatedData.password &&
+      updatedData.confirmPassword &&
+      updatedData.password !== updatedData.confirmPassword
+    ) {
+      newErrors.confirmPassword = "Passwords do not match";
+    } else {
+      newErrors.confirmPassword = "";
+    }
+
+    setErrors(newErrors);
+  }
+
+  //  VALIDATE ALL
+  function validateAll() {
+    let newErrors = {};
+
+    if (!data.name || data.name.length < 3)
+      newErrors.name = "Valid name required";
+
+    if (!emailPattern.test(data.email))
+      newErrors.email = "Enter valid email";
+
+    if (!mobilePattern.test(data.mobile))
+      newErrors.mobile = "Enter valid mobile";
+
+    if (!passwordPattern.test(data.password))
+      newErrors.password = "Strong password required";
+
+    if (data.password !== data.confirmPassword)
+      newErrors.confirmPassword = "Passwords mismatch";
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      setMsg("Fix all fields properly");
+      setType("error");
+      setOpen(true);
+    }
+
+    return Object.keys(newErrors).length === 0;
+  }
+
+  //  REGISTER
+  async function handleRegister() {
+    if (!validateAll()) return;
+
+    if (!verified) {
+      setMsg("Please verify email first");
       setType("error");
       setOpen(true);
       return;
     }
 
     try {
-      setLoading(true);
-
-      const res = await api.post("/auth/register", {
+      await api.post("/auth/register", {
         name: data.name,
         email: data.email,
-        mobile: data.mobile,
-        password: data.password
+        password: data.password,
+        mobile: data.mobile
       });
 
-      localStorage.setItem("accessToken", res.data.token);
-      localStorage.setItem("otpEmail", data.email);
-
-      setMsg("OTP sent to your email");
+      setMsg("Registration Successful");
       setType("success");
       setOpen(true);
 
       setTimeout(() => {
-        setOpenOtp(true);
-      }, 800);
+        navigate("/login");
+      }, 1000);
 
     } catch (err) {
-      const msg = err.response?.data?.message || "";
-
-      if (msg.toLowerCase().includes("email")) {
-        setMsg("Email already exists");
-      } else if (msg.toLowerCase().includes("mobile")) {
-        setMsg("Mobile number already exists");
-      } else {
-        setMsg("User already exists");
-      }
-
+      setMsg(err.response?.data?.message || "Registration failed");
       setType("error");
       setOpen(true);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -95,9 +170,9 @@ function Register() {
       <Box
         sx={{
           minHeight: "100vh",
-          pt: { xs: 10, md: 12 }, 
+          pt: 10,
           backgroundImage: `
-            linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+            linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
             url('/Register.png')
           `,
           backgroundSize: "cover",
@@ -108,55 +183,71 @@ function Register() {
       >
         <Grid container>
 
-          {/* LEFT SIDE */}
-          <Grid item xs={12} md={6}
-            sx={{
-              color: "white",
-              p: 5,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "start"
-            }}
-          >
+          {/* LEFT */}
+          <Grid item xs={12} md={6} sx={{ color: "white", p: 6 }}>
             <Typography variant="h3" fontWeight="bold">
-              Your Adventure Starts Here <br />
+              Your Adventure Starts Here.
               <Box component="span" sx={{ fontStyle: "italic" }}>
                 Join TripEase Today
               </Box>
             </Typography>
-
+            
             <Typography variant="h6" sx={{ mt: 2, maxWidth: 400 }}>
               Sign up to discover destinations, plan trips, and travel without limits.
             </Typography>
           </Grid>
 
-          {/* RIGHT SIDE */}
-          <Grid item xs={12} md={6}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "flex-start",   
-                pt: { xs: 2, md:0 },       
-              }}
-            >
-            <Card sx={{ p: 4, width: 400, borderRadius: 4, marginTop:"4px"}}>
-
+          {/* RIGHT */}
+          <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
+            <Card sx={{ p: 4, width: 420, borderRadius: 4 }}>
               <Typography variant="h5" textAlign="center">
                 Create Account
               </Typography>
 
-              <TextField fullWidth label="Full Name" name="name" margin="normal" onChange={handleChange} />
-              <TextField fullWidth label="Email" name="email" margin="normal" onChange={handleChange} />
-              <TextField fullWidth label="Mobile" name="mobile" margin="normal" onChange={handleChange} />
+              <TextField
+                fullWidth label="Name" 
+                name="name"
+                placeholder="John"
+                margin="normal"
+                onChange={handleChange}
+                error={!!errors.name}
+                helperText={errors.name}
+                InputProps={{ startAdornment: <InputAdornment position="start"><Person /></InputAdornment> }}
+              />
 
-              {/* Password */}
+              <TextField
+                fullWidth label="Email" 
+                name="email"
+                placeholder="example@gmail.com"
+                margin="normal"
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
+                InputProps={{ startAdornment: <InputAdornment position="start"><Email /></InputAdornment> }}
+              />
+
+              <TextField
+                fullWidth label="Mobile" 
+                name="mobile"
+                placeholder="9876543210"
+                margin="normal"
+                onChange={handleChange}
+                error={!!errors.mobile}
+                helperText={errors.mobile}
+                InputProps={{ startAdornment: <InputAdornment position="start"><Phone /></InputAdornment> }}
+              />
+
               <TextField
                 fullWidth label="Password"
                 type={showPassword ? "text" : "password"}
                 name="password"
+                placeholder="Abc@123"
                 margin="normal"
                 onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
                 InputProps={{
+                  startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton onClick={() => setShowPassword(!showPassword)}>
@@ -167,14 +258,17 @@ function Register() {
                 }}
               />
 
-              {/* Confirm Password */}
               <TextField
                 fullWidth label="Confirm Password"
                 type={showConfirm ? "text" : "password"}
                 name="confirmPassword"
+                placeholder="Re-Eter Password"
                 margin="normal"
                 onChange={handleChange}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword}
                 InputProps={{
+                  startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton onClick={() => setShowConfirm(!showConfirm)}>
@@ -185,31 +279,36 @@ function Register() {
                 }}
               />
 
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 2 }}
-                onClick={handleRegister}
-              >
-                {loading ? "Sending OTP..." : "Register"}
-              </Button>
+              <EmailOtpVerification
+                email={emailPattern.test(data.email) ? data.email : ""}
+                onVerified={setVerified}
+                setMsg={setMsg}
+                setType={setType}
+                setOpen={setOpen}
+              />
+
+              {verified && (
+                <Button fullWidth variant="contained" sx={{ mt: 3 }} onClick={handleRegister}>
+                  Register
+                </Button>
+              )}
+
+              <Typography textAlign="center" sx={{ mt: 2 }}>
+                Already have an account?{" "}
+                <span style={{ color: "#1976d2", cursor: "pointer" }}
+                  onClick={() => navigate("/login")}>
+                  Login
+                </span>
+              </Typography>
 
             </Card>
           </Grid>
         </Grid>
 
-        {/* SNACKBAR */}
         <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)}>
           <Alert severity={type}>{msg}</Alert>
         </Snackbar>
       </Box>
-
-      {/* OTP DIALOG */}
-      <Dialog open={openOtp} maxWidth="xs" fullWidth>
-        <DialogContent>
-          <VerifyOtp />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
