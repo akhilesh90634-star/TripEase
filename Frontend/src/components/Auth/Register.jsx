@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Box, TextField, Button, Typography, Card, Grid, IconButton, InputAdornment, Snackbar, 
-  Alert} from "@mui/material";
+import {Box, TextField, Button, Typography, Card, Grid,IconButton, InputAdornment, 
+  Snackbar, Alert} from "@mui/material";
 import {Visibility, VisibilityOff, Email, Person, Phone, Lock} from "@mui/icons-material";
 import Navbar from "../LandingPage/Navbar";
 import api from "../Api/Api";
@@ -28,68 +28,100 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // REGEX
+  //  REGEX
   const emailPattern =
-    /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    /^[a-zA-Z](?!.*\.\.)[a-zA-Z0-9._%+-]{2,}@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
 
   const mobilePattern = /^[6-9]\d{9}$/;
 
   const passwordPattern =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-  // HANDLE CHANGE
+  //  HANDLE CHANGE 
   function handleChange(e) {
     const { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
 
-    let err = "";
+    const updatedData = {
+      ...data,
+      [name]: value
+    };
 
-    if (name === "email" && value && !emailPattern.test(value)) {
-      err = "Email must be validiate";
+    setData(updatedData);
+
+    let newErrors = { ...errors };
+
+    // NAME
+    if (name === "name") {
+      if (!value.trim()) newErrors.name = "Name required";
+      else if (value.length < 3) newErrors.name = "Min 3 characters";
+      else newErrors.name = "";
     }
 
-    if (name === "mobile" && value && !mobilePattern.test(value)) {
-      err = "Mobile must be 10 digits";
+    // EMAIL
+    if (name === "email") {
+      if (!emailPattern.test(value)) {
+        newErrors.email = "Email must start with letter & be valid";
+      } else {
+        newErrors.email = "";
+      }
     }
 
-    if (name === "password" && value && !passwordPattern.test(value)) {
-      err = "Min 6 chars with A-Z, a-z, number & special char";
+    // MOBILE
+    if (name === "mobile") {
+      if (!mobilePattern.test(value)) {
+        newErrors.mobile = "Enter valid 10-digit mobile";
+      } else {
+        newErrors.mobile = "";
+      }
     }
 
-    if (name === "confirmPassword" && value !== data.password) {
-      err = "Passwords do not match";
+    // PASSWORD
+    if (name === "password") {
+      if (!passwordPattern.test(value)) {
+        newErrors.password =
+          "Min 8 chars with A-Z, a-z, number & special char";
+      } else {
+        newErrors.password = "";
+      }
     }
 
-    setErrors((prev) => ({ ...prev, [name]: err }));
+    // PASSWORD MATCH
+    if (
+      updatedData.password &&
+      updatedData.confirmPassword &&
+      updatedData.password !== updatedData.confirmPassword
+    ) {
+      newErrors.confirmPassword = "Passwords do not match";
+    } else {
+      newErrors.confirmPassword = "";
+    }
+
+    setErrors(newErrors);
   }
 
-  // VALIDATE ALL
+  //  VALIDATE ALL
   function validateAll() {
     let newErrors = {};
 
-    if (!data.name) newErrors.name = "Name required";
+    if (!data.name || data.name.length < 3)
+      newErrors.name = "Valid name required";
 
-    if (!data.email) newErrors.email = "Email required";
-    else if (!emailPattern.test(data.email))
-      newErrors.email = "Invalid email";
+    if (!emailPattern.test(data.email))
+      newErrors.email = "Enter valid email";
 
-    if (!data.mobile) newErrors.mobile = "Mobile required";
-    else if (!mobilePattern.test(data.mobile))
-      newErrors.mobile = "Invalid mobile";
+    if (!mobilePattern.test(data.mobile))
+      newErrors.mobile = "Enter valid mobile";
 
-    if (!data.password) newErrors.password = "Password required";
-    else if (!passwordPattern.test(data.password))
-      newErrors.password = "Weak password";
+    if (!passwordPattern.test(data.password))
+      newErrors.password = "Strong password required";
 
-    if (!data.confirmPassword)
-      newErrors.confirmPassword = "Confirm password required";
-    else if (data.password !== data.confirmPassword)
+    if (data.password !== data.confirmPassword)
       newErrors.confirmPassword = "Passwords mismatch";
 
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
-      setMsg("Please fill the details");
+      setMsg("Fix all fields properly");
       setType("error");
       setOpen(true);
     }
@@ -97,9 +129,16 @@ function Register() {
     return Object.keys(newErrors).length === 0;
   }
 
-  // REGISTER
+  //  REGISTER
   async function handleRegister() {
     if (!validateAll()) return;
+
+    if (!verified) {
+      setMsg("Please verify email first");
+      setType("error");
+      setOpen(true);
+      return;
+    }
 
     try {
       await api.post("/auth/register", {
@@ -109,7 +148,7 @@ function Register() {
         mobile: data.mobile
       });
 
-      setMsg("Registration Successful ");
+      setMsg("Registration Successful");
       setType("success");
       setOpen(true);
 
@@ -145,59 +184,68 @@ function Register() {
         <Grid container>
 
           {/* LEFT */}
-         <Grid item xs={12} md={6}
-            sx={{
-              color: "white",
-              p: 6,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "start"
-            }}
-          >
-              <Typography variant="h3" fontWeight="bold">
-              Your Adventure Starts Here .
+          <Grid item xs={12} md={6} sx={{ color: "white", p: 6 }}>
+            <Typography variant="h3" fontWeight="bold">
+              Your Adventure Starts Here.
               <Box component="span" sx={{ fontStyle: "italic" }}>
                 Join TripEase Today
               </Box>
             </Typography>
-
+            
             <Typography variant="h6" sx={{ mt: 2, maxWidth: 400 }}>
               Sign up to discover destinations, plan trips, and travel without limits.
             </Typography>
           </Grid>
 
           {/* RIGHT */}
-          <Grid item xs={12} md={6}
-            sx={{ display: "flex", justifyContent: "center" }}
-          >
+          <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
             <Card sx={{ p: 4, width: 420, borderRadius: 4 }}>
               <Typography variant="h5" textAlign="center">
                 Create Account
               </Typography>
 
-              <TextField fullWidth label="Name" name="name"
-                margin="normal" onChange={handleChange}
-                error={!!errors.name} helperText={errors.name}
+              <TextField
+                fullWidth label="Name" 
+                name="name"
+                placeholder="John"
+                margin="normal"
+                onChange={handleChange}
+                error={!!errors.name}
+                helperText={errors.name}
                 InputProps={{ startAdornment: <InputAdornment position="start"><Person /></InputAdornment> }}
               />
 
-              <TextField fullWidth label="Email" name="email"
-                margin="normal" onChange={handleChange}
-                error={!!errors.email} helperText={errors.email}
+              <TextField
+                fullWidth label="Email" 
+                name="email"
+                placeholder="example@gmail.com"
+                margin="normal"
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
                 InputProps={{ startAdornment: <InputAdornment position="start"><Email /></InputAdornment> }}
               />
 
-              <TextField fullWidth label="Mobile" name="mobile"
-                margin="normal" onChange={handleChange}
-                error={!!errors.mobile} helperText={errors.mobile}
+              <TextField
+                fullWidth label="Mobile" 
+                name="mobile"
+                placeholder="9876543210"
+                margin="normal"
+                onChange={handleChange}
+                error={!!errors.mobile}
+                helperText={errors.mobile}
                 InputProps={{ startAdornment: <InputAdornment position="start"><Phone /></InputAdornment> }}
               />
 
-              <TextField fullWidth label="Password"
+              <TextField
+                fullWidth label="Password"
                 type={showPassword ? "text" : "password"}
-                name="password" margin="normal"
+                name="password"
+                placeholder="Abc@123"
+                margin="normal"
                 onChange={handleChange}
-                error={!!errors.password} helperText={errors.password}
+                error={!!errors.password}
+                helperText={errors.password}
                 InputProps={{
                   startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
                   endAdornment: (
@@ -210,11 +258,14 @@ function Register() {
                 }}
               />
 
-              <TextField fullWidth label="Confirm Password"
+              <TextField
+                fullWidth label="Confirm Password"
                 type={showConfirm ? "text" : "password"}
-                name="confirmPassword" margin="normal"
+                name="confirmPassword"
+                placeholder="Re-Eter Password"
+                margin="normal"
                 onChange={handleChange}
-                error={!!errors.confirmPassword} 
+                error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword}
                 InputProps={{
                   startAdornment: <InputAdornment position="start"><Lock /></InputAdornment>,
@@ -228,19 +279,16 @@ function Register() {
                 }}
               />
 
-              {/* OTP */}
               <EmailOtpVerification
-                email={data.email}
+                email={emailPattern.test(data.email) ? data.email : ""}
                 onVerified={setVerified}
-                validateAll={validateAll}
                 setMsg={setMsg}
                 setType={setType}
                 setOpen={setOpen}
               />
 
               {verified && (
-                <Button fullWidth variant="contained" sx={{ mt: 3 }}
-                  onClick={handleRegister}>
+                <Button fullWidth variant="contained" sx={{ mt: 3 }} onClick={handleRegister}>
                   Register
                 </Button>
               )}

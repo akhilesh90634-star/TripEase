@@ -188,6 +188,16 @@ function Login() {
                 }}
               />
 
+            <Typography textAlign="right" sx={{ mt: 1 }}>
+              <Link
+                component="button"
+                // onClick={() => navigate("/forgot-password")}
+                sx={{ fontSize: "0.9rem" }}
+              >
+                Forgot Password?
+              </Link>
+            </Typography>
+
               <Button
                 fullWidth
                 variant="contained"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {Box,TextField,Button} from "@mui/material";
+import { Box, TextField, Button, CircularProgress } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
 import api from "../Api/Api";
 
@@ -17,7 +17,11 @@ function EmailOtpVerification({
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
 
-  const intervalRef = useRef(null); 
+  const [loadingVerify, setLoadingVerify] = useState(false);
+  const [loadingSend, setLoadingSend] = useState(false);
+  const [loadingResend, setLoadingResend] = useState(false);
+
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     if (otpSent && timer > 0 && !verified) {
@@ -33,13 +37,14 @@ function EmailOtpVerification({
 
   // SEND OTP
   async function sendOtp() {
-
     if (!email) {
       setMsg("Please fill the details");
       setType("error");
       setOpen(true);
       return;
     }
+
+    setLoadingSend(true);
 
     try {
       await api.post("/auth/send-otp", { email });
@@ -56,11 +61,15 @@ function EmailOtpVerification({
       setMsg(err.response?.data?.message || "Failed to send OTP");
       setType("error");
       setOpen(true);
+    } finally {
+      setLoadingSend(false);
     }
   }
 
   // RESEND OTP
   async function resendOtp() {
+    setLoadingResend(true);
+
     try {
       await api.post("/auth/resend-otp", { email });
 
@@ -75,6 +84,8 @@ function EmailOtpVerification({
       setMsg("Resend failed");
       setType("error");
       setOpen(true);
+    } finally {
+      setLoadingResend(false);
     }
   }
 
@@ -86,6 +97,8 @@ function EmailOtpVerification({
       setOpen(true);
       return;
     }
+
+    setLoadingVerify(true);
 
     try {
       await api.post("/auth/verify-otp", { email, otp });
@@ -105,14 +118,25 @@ function EmailOtpVerification({
       setMsg("Invalid OTP");
       setType("error");
       setOpen(true);
+    } finally {
+      setLoadingVerify(false);
     }
   }
 
   return (
     <Box sx={{ mt: 2 }}>
       {!otpSent ? (
-        <Button fullWidth variant="contained" onClick={sendOtp}>
-          Verify Email
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={sendOtp}
+          disabled={loadingSend}
+        >
+          {loadingSend ? (
+            <CircularProgress size={22} color="inherit" />
+          ) : (
+            "Verify Email"
+          )}
         </Button>
       ) : (
         <div>
@@ -122,12 +146,16 @@ function EmailOtpVerification({
               label="Enter OTP"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
-              disabled={verified}
+              disabled={verified || loadingVerify}
             />
 
             {!verified ? (
-              <Button onClick={verifyOtp}>
-                Verify
+              <Button onClick={verifyOtp} disabled={loadingVerify}>
+                {loadingVerify ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  "Verify"
+                )}
               </Button>
             ) : (
               <CheckCircle color="success" />
@@ -137,9 +165,15 @@ function EmailOtpVerification({
           <Button
             sx={{ mt: 1 }}
             onClick={resendOtp}
-            disabled={!canResend}
+            disabled={!canResend || loadingResend}
           >
-            {canResend ? "Resend OTP" : `Resend (${timer}s)`}
+            {loadingResend ? (
+              <CircularProgress size={18} color="inherit" />
+            ) : canResend ? (
+              "Resend OTP"
+            ) : (
+              `Resend (${timer}s)`
+            )}
           </Button>
         </div>
       )}
