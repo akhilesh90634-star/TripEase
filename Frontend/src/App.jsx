@@ -11,6 +11,8 @@ import AgentRoutes from "./components/Routes/AgentRoutes";
 import CustomerRoutes from "./components/Routes/CustomerRoutes";
 import AdminRoutes from "./components/Routes/AdminRoutes";
 
+import Destinations from "./components/Destination/Destinations";
+
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -41,6 +43,7 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/destinations" element={<Destinations/>}/>
 
         {/* ROLE BASED */}
         <Route path="/admin/*" element={<AdminRoutes />} />
