@@ -24,6 +24,10 @@ app.use("/api/trips", tripRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/updates", updateRoutes);
 
+//Cart
+const CartRoutes = require("./routes/CartRoutes");
+app.use("/api", CartRoutes);
+
 app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
