@@ -147,6 +147,7 @@ async function resendOtp(req, res) {
           <h2>TripEase OTP Verification</h2>
           <p>Your new OTP is:</p>
           <h1>${otp}</h1>
+          <p>This OTP is valid for 10 minutes</p>
         </div>
       `
     });
