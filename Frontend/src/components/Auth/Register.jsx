@@ -34,8 +34,7 @@ function Register() {
 
   const mobilePattern = /^[6-9]\d{9}$/;
 
-  const passwordPattern =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\W.{8,}$/;
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
 
   function handleChange(e) {
     const { name, value } = e.target;
