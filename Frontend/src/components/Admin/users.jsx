@@ -14,7 +14,7 @@ function Users() {
   async function fetchUsers () {
     try {
       const res = await api.get("/users");
-      const usersData = res.data.users || res.data;
+      const usersData = res.data. users ||res.data;
       const onlyUsers = usersData.filter((user) => {
         if (!user.role)
              return false;
