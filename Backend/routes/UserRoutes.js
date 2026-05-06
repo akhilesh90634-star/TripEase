@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  createUser,
+  // createUser,
   getAllUsers,
   getUserById,
   updateUser,
@@ -16,7 +16,7 @@ const {
 
 
 // CREATE → Admin
-router.post("/", adminAuth, createUser);
+// router.post("/", adminAuth, createUser);
 
 // GET ALL → Admin
 router.get("/", adminAuth, getAllUsers);

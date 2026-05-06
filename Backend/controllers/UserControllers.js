@@ -2,25 +2,25 @@ const UserModel = require("../model/UserModel");
 
 
 // CREATE USER (Admin)
-const createUser = async (req, res) => {
-  try {
-    const { name, email, password, role } = req.body;
+// const createUser = async (req, res) => {
+//   try {
+//     const { name, email, password, role } = req.body;
 
-    const user = await UserModel.create({
-      name,
-      email,
-      password,
-      role
-    });
+//     const user = await UserModel.create({
+//       name,
+//       email,
+//       password,
+//       role
+//     });
 
-    res.status(201).json({
-      message: "User created",
-      user
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+//     res.status(201).json({
+//       message: "User created",
+//       user
+//     });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
 
 
 // GET ALL USERS (Admin)
@@ -109,7 +109,7 @@ const deleteUser = async (req, res) => {
 
 
 module.exports = {
-  createUser,
+  // createUser,
   getAllUsers,
   getUserById,
   updateUser,
