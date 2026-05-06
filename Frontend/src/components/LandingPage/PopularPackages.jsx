@@ -79,9 +79,17 @@ function PopularPackages({ packages }) {
                 <Box sx={{ display: "flex", justifyContent: "center", pb: 2 }}>
                   <Button
                     variant="contained"
-                    onClick={() => navigate("/login")}
+                    onClick={() => {
+                      const token = localStorage.getItem("token");
+
+                      if (!token) {
+                        navigate("/login");
+                      } else {
+                        navigate("/customer/mycart");
+                      }
+                    }}
                   >
-                    Add to Cart
+                    Book Now
                   </Button>
                 </Box>
 

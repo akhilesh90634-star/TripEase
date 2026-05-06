@@ -21,15 +21,27 @@ function EmailOtpVerification({
   const [loadingSend, setLoadingSend] = useState(false);
   const [loadingResend, setLoadingResend] = useState(false);
 
+  const sentRef = useRef(false);
+
+  useEffect(() => {
+    if (email && !sentRef.current) {
+      sendOtp();
+      sentRef.current = true;
+    }
+  }, [email]);
+
   const intervalRef = useRef(null);
 
   useEffect(() => {
     if (otpSent && timer > 0 && !verified) {
       intervalRef.current = setInterval(() => {
-        setTimer((p) => p - 1);
+        setTimer((prev) => prev - 1);
       }, 1000);
-    } else if (timer === 0) {
+    }
+
+    if (timer === 0) {
       setCanResend(true);
+      clearInterval(intervalRef.current);
     }
 
     return () => clearInterval(intervalRef.current);
@@ -125,58 +137,45 @@ function EmailOtpVerification({
 
   return (
     <Box sx={{ mt: 2 }}>
-      {!otpSent ? (
-        <Button
+
+      {/* OTP INPUT */}
+      <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+        <TextField
           fullWidth
-          variant="contained"
-          onClick={sendOtp}
-          disabled={loadingSend}
-        >
-          {loadingSend ? (
-            <CircularProgress size={22} color="inherit" />
-          ) : (
-            "Verify Email"
-          )}
-        </Button>
-      ) : (
-        <div>
-          <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-            <TextField
-              fullWidth
-              label="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              disabled={verified || loadingVerify}
-            />
+          label="Enter OTP"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+          disabled={verified || loadingVerify}
+        />
 
-            {!verified ? (
-              <Button onClick={verifyOtp} disabled={loadingVerify}>
-                {loadingVerify ? (
-                  <CircularProgress size={20} color="inherit" />
-                ) : (
-                  "Verify"
-                )}
-              </Button>
+        {!verified ? (
+          <Button onClick={verifyOtp} disabled={loadingVerify}>
+            {loadingVerify ? (
+              <CircularProgress size={20} color="inherit" />
             ) : (
-              <CheckCircle color="success" />
-            )}
-          </Box>
-
-          <Button
-            sx={{ mt: 1 }}
-            onClick={resendOtp}
-            disabled={!canResend || loadingResend}
-          >
-            {loadingResend ? (
-              <CircularProgress size={18} color="inherit" />
-            ) : canResend ? (
-              "Resend OTP"
-            ) : (
-              `Resend (${timer}s)`
+              "Verify"
             )}
           </Button>
-        </div>
-      )}
+        ) : (
+          <CheckCircle color="success" />
+        )}
+      </Box>
+
+      {/* RESEND */}
+      <Button
+        sx={{ mt: 1 }}
+        onClick={resendOtp}
+        disabled={!canResend || loadingResend || verified}
+      >
+        {loadingResend ? (
+          <CircularProgress size={18} color="inherit" />
+        ) : canResend ? (
+          "Resend OTP"
+        ) : (
+          `Resend (${timer}s)`
+        )}
+      </Button>
+
     </Box>
   );
 }

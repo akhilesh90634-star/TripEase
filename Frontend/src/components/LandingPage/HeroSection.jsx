@@ -173,7 +173,7 @@ function HeroSection({ setFilteredPackages }) {
           sx={{
             position: "absolute",
             inset: 0,
-            background: "rgba(0,0,0,0.3)"
+             background: "rgba(0,0,0,0.3)"
           }}
         />
 
@@ -205,18 +205,32 @@ function HeroSection({ setFilteredPackages }) {
             <Box sx={{ position: "relative" }} ref={wrapperRef}>
 
               <TextField
-                placeholder="Search: Goa, Mountain, Solo..."
-                value={search}
-                onChange={(e) => handleSearch(e.target.value)}
-                onFocus={() =>
-                  suggestions.length && setShowSuggestions(true)
+              placeholder="Search: Goa, Mountain, Solo..."
+              value={search}
+              onChange={(e) => handleSearch(e.target.value)}
+              onFocus={() => suggestions.length && setShowSuggestions(true)}
+              variant="outlined"
+              sx={{
+                width: "320px",
+
+              // Input text color
+              input: { color: "white" },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "white",
+                },
+                "&:hover fieldset": {
+                  borderColor: "white",   
+                },
+
+                // Focus border
+                "&.Mui-focused fieldset": {
+                  borderColor:"white",
+                  borderWidth: "2px",
                 }
-                sx={{
-                  width: "320px",
-                  input: { color: "white" },
-                  fieldset: { borderColor: "white" }
-                }}
-              />
+              }
+            }}
+          />
 
               {/* DROPDOWN */}
               {showSuggestions && (
@@ -256,7 +270,7 @@ function HeroSection({ setFilteredPackages }) {
                     ))
                   ) : (
                     <Typography sx={{ p: 2 }}>
-                      No results
+                       The Package is not found
                     </Typography>
                   )}
                 </Box>
@@ -264,15 +278,23 @@ function HeroSection({ setFilteredPackages }) {
 
             </Box>
 
-            <Button
-              sx={{
-                bgcolor: "#e5ddd5",
-                color: "black",
-                minWidth: "60px"
-              }}
-            >
-              <Search />
-            </Button>
+          <Button
+            onClick={() => handleSearch(search)}
+            sx={{
+              bgcolor: "#e5ddd5",
+              color: "black",
+              minWidth: "60px",
+              "&:hover": {
+                bgcolor: "#e5ddd5", 
+              },
+              "&:active": {
+                bgcolor: "#e5ddd5",   
+              },
+              
+            }}
+          >
+            <Search />
+          </Button>
           </Stack>
         </Box>
 

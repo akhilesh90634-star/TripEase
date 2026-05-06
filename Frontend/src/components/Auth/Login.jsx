@@ -42,6 +42,7 @@ function Login() {
 
       localStorage.setItem("accessToken", result.accessToken);
       localStorage.setItem("refreshToken", result.refreshToken);
+      localStorage.setItem("role", res.data.role);
 
       setMsg("Login successful");
       setType("success");
@@ -66,6 +67,11 @@ function Login() {
     }
   }
 
+function handleKeyPress(e) {
+  if (e.key === "Enter") {
+    handleLogin();
+  }
+}
   return (
     <div>
       <Navbar />
@@ -174,6 +180,7 @@ function Login() {
                 margin="normal"
                 value={data.password}
                 onChange={handleChange}
+                onKeyDown={handleKeyPress}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

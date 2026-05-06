@@ -17,6 +17,7 @@ function Destinations() {
 
   return (
     <Box>
+      <Navbar/>
      
       {/* Page Content */}
       <Box sx={{ px: 4, py: 12 }}>
@@ -113,3 +114,6 @@ function Destinations() {
 }
 
 export default Destinations;
+
+
+
